@@ -1,0 +1,12 @@
+{
+  "strasbourg_clock_x108/README.md": "c8c7524b91056d3651a55c7b51ff23a95b2c4750cce3346581438f8484f251bf",
+  "strasbourg_clock_x108/manifest.json": "c3ea533b565c43dd898c677bf2d5718de3d9f5df9af050e15f431b91c4019df0",
+  "strasbourg_clock_x108/test1_baseline.csv": "6ebdd781806c4ed82ec57b32431d325ddf722cf120c8adc6f7ec75c2985008fd",
+  "strasbourg_clock_x108/test2_noise.csv": "92df9cdd27e3c2924081cb3518a4492eb7f352162eaa6fb4316556e7441c33ca",
+  "strasbourg_clock_x108/test3_structural_error.csv": "3f4f451490e15e15edf0934225ae21f38b94fa031455df37a0c3b01e448a11e3",
+  "strasbourg_clock_x108/test4_hold.csv": "65e635c3410418fc2fadaae9ac21a84b87fd95b1fbfa125e3ea5a1f86506a3fa",
+  "strasbourg_clock_x108_graphs/test1_baseline_delta_day.png": "fdf07fc81c6652ce06a77a110aa776b8b7c6109ba55d159a67e5c42529924ecc",
+  "strasbourg_clock_x108_graphs/test2_noise_delta_day.png": "ccdd4f0e04a16095298bbb4c5bbedb920dd2967499c094a2c6cf77abdc2be34b",
+  "strasbourg_clock_x108_graphs/test3_structural_error_delta_day.png": "1abe419c4e60390c787a2342a442f8d1b3a214a7f646042e4398fa2151e970ed",
+  "strasbourg_clock_x108_graphs/test4_hold_delta_day.png": "ba95d12fb2eb283880f3d5efa7f0ea9718b5a9f1d7e2ed7b74ee6f856d9ef555"
+}

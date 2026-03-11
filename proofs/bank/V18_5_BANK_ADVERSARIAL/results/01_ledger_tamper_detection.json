@@ -1,0 +1,27 @@
+{
+  "attestation_before": {
+    "ts_utc": "2026-03-03T14:29:24Z",
+    "day": "2026-03-03",
+    "audit_log_sha256": "f7327490c817e22b31be81357a3a473e45b5f98b31f1a7faabf64fb994d427e3",
+    "audit_chain_sha256": "595244d090008c5868551a2cf5a9eccbda3b130a8d67df7c031541f1a13f26ae",
+    "prev_attestation_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "kernel_version": "",
+    "gateway_version": "",
+    "attestation_hash": "ff6295f8780bcb18c8df6fd6846ae4b04028bb5e264346fa14be6a17a55bed39"
+  },
+  "attestation_after": {
+    "ts_utc": "2026-03-03T14:29:24Z",
+    "day": "2026-03-03",
+    "audit_log_sha256": "9b3521033cf5ccf3bcf16ba9f6017a140f0e29feba8db5e0abd43eddae1dba7b",
+    "audit_chain_sha256": "595244d090008c5868551a2cf5a9eccbda3b130a8d67df7c031541f1a13f26ae",
+    "prev_attestation_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "kernel_version": "",
+    "gateway_version": "",
+    "attestation_hash": "41dec8a7297b7eeb4419df2d5d79ebeb33ecf46aa6e108d850039aa3aa277c41"
+  },
+  "audit_log_sha256_changed": true,
+  "audit_chain_sha256_changed": false,
+  "chain_last_hash_declared": "bdf47be1813d7a9827d1025c03a8667cb03059d26a7e0b30c19ed856e1bae114",
+  "chain_last_hash_recomputed_from_log": "e70ae9a795604ff85a9794ca26dd43cd5058795ab7ef13fa8ef363c828d46a2e",
+  "tamper_detected_by_chain_mismatch": true
+}

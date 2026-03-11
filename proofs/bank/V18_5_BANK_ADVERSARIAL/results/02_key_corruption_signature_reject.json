@@ -1,0 +1,7 @@
+{
+  "verify_original_signature": true,
+  "verify_corrupted_signature": false,
+  "signature_b64": "R5TRZiOhPuJTFMKd9tLbDa6XqeOZhFnzgH5xrU5d86YBKwHliZt6TsmcMqt5veyMRXivl4fmIgY7gjThbAvHDg==",
+  "corrupted_signature_b64": "RpTRZiOhPuJTFMKd9tLbDa6XqeOZhFnzgH5xrU5d86YBKwHliZt6TsmcMqt5veyMRXivl4fmIgY7gjThbAvHDg==",
+  "message": "obsidia-bank-proof:commit-digest=abc123"
+}

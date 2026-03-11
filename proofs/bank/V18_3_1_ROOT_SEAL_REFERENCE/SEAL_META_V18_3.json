@@ -1,0 +1,10 @@
+{
+  "freeze": "OBSIDIA_V18_3_FINAL_SEALED",
+  "timestamp": "2026-03-03T14:21:17.600300Z",
+  "root_hash": "de30d03aee32fb849dac7de512908e2e78d4ba16728005ed8613b0b841dd3c6b",
+  "sha256": {
+    "MASTER_MANIFEST_V18_3.json": "8652710ff9bef10fb6ce3be81e0af103b8b000f84df13419cf7382bd27ba31bc",
+    "ROOT_HASH_V18_3.txt": "31a132fc397830c41eed1769d4403de41df4eca83c9035bcaa9ca41161f3174f",
+    "GLOBAL_SEAL_HASH": "400990b3346c70a18295b5dff9fa40448f52dbef98e95c87d4fd66630e3a6ec7"
+  }
+}

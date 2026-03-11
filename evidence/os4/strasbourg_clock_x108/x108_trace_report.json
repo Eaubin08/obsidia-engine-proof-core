@@ -1,0 +1,60 @@
+{
+  "timestamp": "2026-03-03T22:21:04.631407Z",
+  "standard": "X-108 STD 1.0",
+  "profile": "OS4/Strasbourg",
+  "field": "delta_day",
+  "threshold": 0.05,
+  "traces": [
+    {
+      "trace": "test1_baseline.csv",
+      "total_steps": 2000,
+      "irr_steps": 0,
+      "act_steps": 2000,
+      "violations": 0,
+      "delta_min": 0.0,
+      "delta_max": 0.0,
+      "delta_mean": 0.0,
+      "status": "PASS"
+    },
+    {
+      "trace": "test2_noise.csv",
+      "total_steps": 2000,
+      "irr_steps": 44,
+      "act_steps": 1956,
+      "violations": 0,
+      "delta_min": 0.0,
+      "delta_max": 0.999108,
+      "delta_mean": 0.040855,
+      "status": "PASS"
+    },
+    {
+      "trace": "test3_structural_error.csv",
+      "total_steps": 2000,
+      "irr_steps": 1,
+      "act_steps": 1999,
+      "violations": 0,
+      "delta_min": 0.0,
+      "delta_max": 1.0,
+      "delta_mean": 0.0005,
+      "status": "PASS"
+    },
+    {
+      "trace": "test4_hold.csv",
+      "total_steps": 2000,
+      "irr_steps": 808,
+      "act_steps": 1192,
+      "violations": 0,
+      "delta_min": 0.0,
+      "delta_max": 0.999244,
+      "delta_mean": 0.241739,
+      "status": "PASS"
+    }
+  ],
+  "summary": {
+    "total_traces": 4,
+    "total_steps": 8000,
+    "total_violations": 0,
+    "gate_effect_check": "PASS",
+    "verdict": "ALL PASS"
+  }
+}

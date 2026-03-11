@@ -1,0 +1,16 @@
+{
+  "phase": "14B1",
+  "type": "RFC3161",
+  "authority": "FreeTSA.org",
+  "payload": "4842d40b1acac4fec406b2da0df84ee77167a37e4f131685318fb95ff2819384",
+  "payload_type": "GLOBAL_SEAL_HASH",
+  "commit": "68f166721bd091e770d0ea059a8a741d353bbe97",
+  "tag": "v13-final",
+  "timestamp_utc": "Mar  3 19:45:23 2026 GMT",
+  "files": {
+    "tsq": "anchors/phase14/rfc3161_global_seal.tsq",
+    "tsr": "anchors/phase14/rfc3161_timestamp.tsr"
+  },
+  "verify_command": "openssl ts -verify -in anchors/phase14/rfc3161_timestamp.tsr -queryfile anchors/phase14/rfc3161_global_seal.tsq -CAfile /tmp/freetsa_ca.pem -untrusted /tmp/freetsa_tsa.crt",
+  "status": "VERIFIED"
+}

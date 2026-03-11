@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-03-03T15:22:30.725616Z",
+  "checks": {
+    "V18_3_1_seal_verify": {
+      "pass": true,
+      "stdout": "PASS\n"
+    },
+    "V18_3_1_root_hash_verify": {
+      "pass": true,
+      "stdout": "PASS\n"
+    },
+    "V18_7_checker_run": {
+      "pass": true,
+      "stdout": "OK written /home/ubuntu/Obsidia-lab-trad/proofkit/V18_7_NONCIRCUMVENTION/results/results_v18_7.json\n"
+    },
+    "V18_7_invariants": {
+      "pass": true
+    },
+    "V18_8_checker_run": {
+      "pass": true,
+      "stdout": "OK\n"
+    },
+    "V18_8_invariants": {
+      "pass": true
+    }
+  },
+  "overall": "PASS"
+}

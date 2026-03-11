@@ -1,0 +1,14 @@
+{
+  "created": "2026-03-03T14:29:55.231018Z",
+  "sha256": {
+    "REPORT_V18_5_BANK_ADVERSARIAL.md": "80863471ba81047332ec82c884c4a8d1715d40160c2226903792ed3e24f87dba",
+    "scripts/01_ledger_tamper_detection.py": "3963294df74f7bf80a79b0e67675acdfc03ad8d818c946cf5bb09682beac9cca",
+    "scripts/02_key_corruption_signature_reject.py": "cb124b9395c3d2bc7faeb6f9171a77c4053a76b33a8a8caecfd3102c6dd662e5",
+    "scripts/03_pbft_safety_simulation.py": "30886665dafc1bd09d0e61e304136902e4a09d6e6ca2dd315a6501b12f9b8475",
+    "results/01_ledger_tamper_detection.json": "ad2b236f8fde898204b8418df8fe87c1341b88ef6d571251dca58be9980f9aa5",
+    "results/02_key_corruption_signature_reject.json": "310ecf980d864cd0ffbec17dcceb2d18b6b838f87c3f92c989503fd0a41297c4",
+    "results/03_pbft_safety_simulation.json": "b2e3fa029f01098b62fb6ed1dba06687d398d0b2a9ce0fa783f5ef5d563cf02b",
+    "results/api_store/audit.log": "9b3521033cf5ccf3bcf16ba9f6017a140f0e29feba8db5e0abd43eddae1dba7b",
+    "results/api_store/audit.chain": "595244d090008c5868551a2cf5a9eccbda3b130a8d67df7c031541f1a13f26ae"
+  }
+}

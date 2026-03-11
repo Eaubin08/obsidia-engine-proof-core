@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  node1:
+    build: .
+    environment: [ "OBSIDIA_NODE_ID=node1" ]
+    ports: ["8001:8000"]
+  node2:
+    build: .
+    environment: [ "OBSIDIA_NODE_ID=node2" ]
+    ports: ["8002:8000"]
+  node3:
+    build: .
+    environment: [ "OBSIDIA_NODE_ID=node3" ]
+    ports: ["8003:8000"]
+  node4:
+    build: .
+    environment: [ "OBSIDIA_NODE_ID=node4" ]
+    ports: ["8004:8000"]
+  aggregator:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes: [ "./:/app" ]
+    command: python distributed/aggregator.py
+    depends_on: [node1,node2,node3,node4]

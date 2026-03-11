@@ -1,0 +1,27 @@
+{
+  "extracted_from": [
+    "strasbourg_clock_x108.zip",
+    "strasbourg_clock_x108_graphs.zip"
+  ],
+  "files": [
+    "strasbourg_clock_x108/README.md",
+    "strasbourg_clock_x108/manifest.json",
+    "strasbourg_clock_x108/test1_baseline.csv",
+    "strasbourg_clock_x108/test2_noise.csv",
+    "strasbourg_clock_x108/test3_structural_error.csv",
+    "strasbourg_clock_x108/test4_hold.csv",
+    "strasbourg_clock_x108_graphs/test1_baseline_delta_day.png",
+    "strasbourg_clock_x108_graphs/test2_noise_delta_day.png",
+    "strasbourg_clock_x108_graphs/test3_structural_error_delta_day.png",
+    "strasbourg_clock_x108_graphs/test4_hold_delta_day.png"
+  ],
+  "csv_files": [
+    "strasbourg_clock_x108/test1_baseline.csv",
+    "strasbourg_clock_x108/test2_noise.csv",
+    "strasbourg_clock_x108/test3_structural_error.csv",
+    "strasbourg_clock_x108/test4_hold.csv"
+  ],
+  "json_files": [
+    "strasbourg_clock_x108/manifest.json"
+  ]
+}

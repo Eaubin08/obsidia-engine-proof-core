@@ -1,0 +1,42 @@
+{
+  "version": "V13-IMMUTABILITY-PROOF",
+  "timestamp": "2026-03-03T19:34:50.077362Z",
+  "files_sealed": 625,
+  "root_hash": "179a86415b8637daf931f32c27d4ff0dddb036ed826016b616f071a71ae81248",
+  "manifest_hash": "d9543dc7cd3e34f6d9087c434232cb1445702e310e67e9f3bc780105d2eadb1e",
+  "root_hash_file_hash": "2b5dcaa88f1b170941ea1f4c45774519c07e90770ca6e5f92a441009a9313c5a",
+  "global_seal_hash": "4842d40b1acac4fec406b2da0df84ee77167a37e4f131685318fb95ff2819384",
+  "seal_method": "git-ls-files-only",
+  "excluded": [
+    "core/api/security/ed25519_private.key",
+    "lean/lake-manifest.json",
+    "proofkit/V11_6_GLOBAL_SEAL/MASTER_MANIFEST_V11_6.json",
+    "proofkit/V11_6_GLOBAL_SEAL/ROOT_HASH_V11_6.txt",
+    "proofkit/V11_6_GLOBAL_SEAL/SEAL_META_V11_6.json",
+    "proofkit/generate_seal_v13.py"
+  ],
+  "lean_modules": [
+    "Obsidia.Basic",
+    "Obsidia.Consensus",
+    "Obsidia.Merkle",
+    "Obsidia.Seal"
+  ],
+  "lean_build": "Build completed successfully (6 jobs)",
+  "theorems": [
+    "D1_determinism",
+    "G1_act_above_threshold",
+    "E2_no_act_below_threshold",
+    "G2_boundary_inclusive",
+    "G3_monotonicity",
+    "L11_3_no_block",
+    "L11_3_act",
+    "L11_3_hold",
+    "aggregate4_act",
+    "aggregate4_hold",
+    "aggregate4_block_by_supermajority",
+    "aggregate4_fail_closed",
+    "merkle2_left_mutation",
+    "merkle2_right_mutation",
+    "P13_Immutability"
+  ]
+}

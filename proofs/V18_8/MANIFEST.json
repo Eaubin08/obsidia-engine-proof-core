@@ -1,0 +1,13 @@
+{
+  "created": "2026-03-03T14:43:17.741275Z",
+  "sha256": {
+    "REPORT_V18_8.md": "e9c1b4ddce5c29aad1c6236663de00d1f6c8563fde5a00a148139e3f5fb54029",
+    "proofs/V18_8_FORMAL_CONVERGENCE.md": "c21ea7c4b95b7dcae5ec6959492a2bfb50d795e7aba9680f6029c59ad574f0d3",
+    "checker/convergence_checker.py": "23f0c81c9d4720218539c0dd811a6a9607468eaa301189cc4a3bdfe565a1ed70",
+    "results/results_v18_8.json": "30d87fe9546c6d76ec7be01874b446fbd71a4fe5226fea4d9209dc17dd60a36b",
+    "metrics_input/strasbourg_clock_x108.zip": "fd121a2652cc768d03d24e0e01fc8389ff6abc091cadc91e3e18595a8e76563e",
+    "metrics_input/strasbourg_clock_x108_graphs.zip": "1f5324319593b400eac37d97ae157c145225be3e0d127b1265366ca6c00539e0",
+    "metrics_input/INVENTORY.json": "6898b6e4d4bd3c3362039e4895507a6f86083f07354b87c97271e9e1f85e67ef",
+    "metrics_input/EXTRACTED_HASHES.json": "04477c5e410d0b667ff3322f2a8f4a0bed43703d4985a4e0a8805732c9c8c7b5"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "artifact": "Obsidia-lab-trad_v13-final.git-archive.zip",
+  "commit": "68f166721bd091e770d0ea059a8a741d353bbe97",
+  "tag": "v13-final",
+  "timestamp": "2026-03-03T19:44:52.079606Z",
+  "sha256": "07ce69a0fbd0e966d15ed80065b8b4d3ba4fe509968abf0096baf3580743101f",
+  "global_seal_hash": "4842d40b1acac4fec406b2da0df84ee77167a37e4f131685318fb95ff2819384",
+  "root_hash": "179a86415b8637daf931f32c27d4ff0dddb036ed826016b616f071a71ae81248",
+  "method": "git archive HEAD",
+  "note": "Artifact hash publi\u00e9 pour audit externe Phase 14A3"
+}

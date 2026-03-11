@@ -1,0 +1,10 @@
+{
+  "created": "2026-03-03T14:37:06.261624Z",
+  "sha256": {
+    "README_V18_7.txt": "2fb483e1136cedf359155050c03b1337c86fe7a55a6d638f3a5ddd43f81da65c",
+    "REPORT_V18_7.md": "f5d12fcda480fcf2b6f09b5486ab8e0e5cab02f128140cca448f1b46e0f53b6d",
+    "proofs/V18_7_FORMAL_THEOREMS.md": "f53246167d71caf7c0c25d5e86d50cbfc9c8bf86a4ce6c26b63558514d7b4206",
+    "checker/noncircumvention_checker.py": "03fbcfb9f95736dc657624127081edf8a284f4e82753e440b3626a76e933cac2",
+    "results/results_v18_7.json": "25e2dea12e8432673be42076c36ae8f52cada23e692a895ff38a8e1211ee5b88"
+  }
+}
