@@ -1,0 +1,295 @@
+OBSIDIA ENGINE PROOF CORE — EXECUTION LOG v1.3.0
+Date: 2026-03-11 UTC
+Repo: github.com/Eaubin08/obsidia-engine-proof-core
+========================================================
+
+ENVIRONNEMENT
+-------------
+OS       : Ubuntu 22.04 linux/amd64
+Python   : 3.11.0rc1
+Node     : v22.13.0
+pnpm     : 10.30.3
+Java     : OpenJDK 11.0.28
+TLC      : TLC2 Version 2026.03.11.044424 (rev: 8a23cb1)
+Lean 4   : 4.28.0 (commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b)
+
+========================================================
+1. TESTS TYPESCRIPT — pnpm test
+========================================================
+Commande : pnpm test
+Fichiers  : tests/engines.test.ts + tests/canonical_components.test.ts
+
+> react-example@0.0.0 test
+> vitest run tests/engines.test.ts tests/canonical_components.test.ts
+
+ RUN  v4.0.18
+
+ ✓ tests/canonical_components.test.ts (27 tests) 14ms
+ ✓ tests/engines.test.ts (12 tests) 61ms
+
+ Test Files  2 passed (2)
+      Tests  39 passed (39)
+   Duration  591ms
+
+EXIT_CODE: 0
+
+========================================================
+2. TESTS PYTHON — pytest -q tests/
+========================================================
+Commande : python3 -m pytest -q tests/
+
+............                                             [100%]
+12 passed in 0.06s
+
+EXIT_CODE: 0
+
+========================================================
+3. PIPELINES AGENTS
+========================================================
+
+--- Trading Bullish ---
+Commande : python3 agents/run_pipeline.py trading examples/trading_bullish.json
+{
+  "x108_gate": "ALLOW",
+  "market_verdict": "EXECUTE_LONG",
+  "severity": "S0",
+  "contradictions": [],
+  "risk_flags": []
+}
+EXIT_CODE: 0
+
+--- Bank Normal ---
+Commande : python3 agents/run_pipeline.py bank examples/bank_normal.json
+{
+  "x108_gate": "ALLOW",
+  "market_verdict": "AUTHORIZE",
+  "severity": "S1",
+  "contradictions": [],
+  "risk_flags": []
+}
+EXIT_CODE: 0
+
+--- Bank Suspicious ---
+Commande : python3 agents/run_pipeline.py bank examples/bank_suspicious.json
+{
+  "x108_gate": "BLOCK",
+  "market_verdict": "ANALYZE",
+  "severity": "S4",
+  "contradictions": ["URGENT_BEHAVIOR", "IDENTITY_CONTEXT_MISMATCH", "NARRATIVE_CONFLICT"],
+  "risk_flags": ["CASH_PRESSURE", "FRAUD_PATTERN", "LIMIT_PRESSURE"],
+  "reason_code": "CONTRADICTION_THRESHOLD_REACHED"
+}
+EXIT_CODE: 0
+
+--- Ecom Normal ---
+Commande : python3 agents/run_pipeline.py ecom examples/ecom_normal.json
+{
+  "x108_gate": "ALLOW",
+  "market_verdict": "PAY",
+  "severity": "S0",
+  "contradictions": [],
+  "risk_flags": []
+}
+EXIT_CODE: 0
+
+========================================================
+4. PROOFKIT GLOBAL — python3 proofs/verify_all.py
+========================================================
+Commande : python3 proofs/verify_all.py
+
+PROOFKIT_REPORT.json — résultats par sous-check:
+  V18_3_1_seal_verify       : PASS
+  V18_3_1_root_hash_verify  : PASS  (rescellé v1.1.0 — hash recalculé 2026-03-11)
+  V18_7_checker             : PASS  (200 000 cas fuzz, 0 violation E2)
+  V18_8_convergence         : PASS  (G1/G2/G3/G4 vérifiés)
+
+Overall: PASS
+EXIT_CODE: 0
+
+========================================================
+5. VÉRIFICATION RFC 3161 — openssl ts -verify
+========================================================
+
+--- Sceau original (2026-03-03 16:43:06 UTC) ---
+Commande : openssl ts -verify -in proofs/anchors/rfc3161_v1.tsr -data proofs/anchors/merkle_root.json -CAfile /tmp/freetsa_ca.pem
+Verification: OK
+EXIT_CODE: 0
+
+--- Sceau v1.1.0 (2026-03-11) ---
+Commande : openssl ts -verify -in proofs/anchors/rfc3161_v110.tsr -data proofs/anchors/merkle_root_v110.json -CAfile /tmp/freetsa_ca.pem
+Verification: OK
+EXIT_CODE: 0
+
+========================================================
+6. CONSENSUS IN-PROCESS — python3 distributed/test_consensus_inprocess.py
+========================================================
+Commande : python3 distributed/test_consensus_inprocess.py
+
+[CONSENSUS IN-PROCESS] 4 nœuds simulés (threads Python)
+  Scénario 1 — Signal haussier (ALLOW attendu)
+    Nœud 1: ALLOW | Nœud 2: ALLOW | Nœud 3: ALLOW | Nœud 4: ALLOW
+    Supermajority (4/4): ALLOW ✓
+  Scénario 2 — Signal crash (BLOCK attendu)
+    Nœud 1: BLOCK | Nœud 2: BLOCK | Nœud 3: BLOCK | Nœud 4: BLOCK
+    Supermajority (4/4): BLOCK ✓
+  Scénario 3 — Split 2/2 (fail-closed → HOLD attendu)
+    Nœud 1: ALLOW | Nœud 2: ALLOW | Nœud 3: HOLD | Nœud 4: HOLD
+    No supermajority: HOLD ✓ (fail-closed démontré)
+
+PASS — fail-closed VERIFIED
+EXIT_CODE: 0
+
+Note: La démo HTTP multi-processus (ports 8011-8014 FastAPI) nécessite Docker.
+      docker-compose.yml disponible dans distributed/.
+
+========================================================
+7. TESTS ADVERSARIAUX PHASE 15.2
+========================================================
+
+--- A1: Monotonicity Break (1 000 000 paires) ---
+Commande : python3 tests/adversarial/test_monotonic_break.py
+[15.2.A-T1] Monotonicity Break Attempt — 1,000,000 random pairs
+  theta_S = 0.25
+  Invariant G3: S1 <= S2 => decision(S1) <= decision(S2)
+  Trials     : 1,000,000
+  Violations : 0
+PASS — G3 holds on 1,000,000 random pairs
+EXIT_CODE: 0
+
+--- A2: Threshold Boundary Fuzz (144 probes) ---
+Commande : python3 tests/adversarial/test_threshold_fuzz.py
+[15.2.A-T2] Threshold Boundary Fuzzing
+  theta values : [0.0, 0.1, 0.25, 0.5, 0.75, 1.0]
+  epsilons     : ['1e-12', '1e-11', '1e-10', '1e-09', '1e-08', '1e-07', '5e-07', '1e-06']
+  Probes       : 144
+  Violations   : 0
+PASS — No non-determinism or semantic flip at boundary
+EXIT_CODE: 0
+
+--- B1: Merkle Collision (100 000 repos + 10 000 paires) ---
+Commande : python3 tests/adversarial/test_merkle_collision.py
+[15.2.B] Merkle Collision Attack
+  Single-leaf probes : 1,049,881
+  Collisions found   : 0
+  Direct collisions  : 0
+  Total violations   : 0
+PASS — No Merkle collision found
+EXIT_CODE: 0
+
+--- C1: Seal Tamper (3 attaques sur V18_3_1) ---
+Commande : python3 tests/adversarial/test_seal_tamper.py
+[15.2.C] Seal Tamper Attack
+  Pre-check: root_hash_verify.py = PASS ✓
+  [DETECTED ✓] MASTER_MANIFEST_V18_3.json tamper
+  [DETECTED ✓] root_hash_verify.py self-tamper
+  [DETECTED ✓] Ghost file injection
+  Tests run  : 3
+  Detected   : 3
+  Undetected : 0
+PASS — All 3 tampers detected by root_hash_verify.py
+EXIT_CODE: 0
+
+--- D1: Consensus Split (141 cas exhaustifs) ---
+Commande : python3 tests/adversarial/test_consensus_split.py
+[15.2.D] Consensus Split Attack
+  Split 2/2 permutations: 6 — ACT violations: 0
+  No-majority combos: 54 — ACT violations: 0
+  Full exhaustive 3^4=81: violations: 0
+  Total tests    : 141
+  Total violations: 0
+PASS — Consensus is fail-closed on all tested combinations
+EXIT_CODE: 0
+
+--- E1: Signature Tamper (5 types d'attaque) ---
+Commande : python3 tests/adversarial/test_signature_tamper.py
+[15.2.E] Signature / Audit Chain Tamper Attack
+  [1/5] decision flip     : DETECTED ✓
+  [2/5] metrics.S tamper  : DETECTED ✓
+  [3/5] ghost entry       : DETECTED ✓
+  [4/5] entry swap        : DETECTED ✓
+  [5/5] theta_S tamper    : DETECTED ✓
+  Tests run: 5 | Detected: 5 | Undetected: 0
+PASS — All 5 tampers detected by hash chain verification
+EXIT_CODE: 0
+
+ADVERSARIAL PHASE 15.2 GLOBAL: 6/6 PASS
+
+========================================================
+8. TLA+ MODEL CHECKING — TLC v2026.03.11
+========================================================
+
+--- X108.tla (SafetyX108) ---
+Commande : java -XX:+UseParallelGC -cp tla2tools.jar tlc2.TLC -config X108_MC.cfg X108_standalone.tla
+Paramètres: TauMax=5, ElapsedMin=-2, ElapsedMax=10
+States generated : 97,656
+Distinct states  : 312
+Model checking completed. No error has been found.
+EXIT_CODE: 0
+
+--- DistributedX108.tla (SafetyDistributed) ---
+Commande : java -XX:+UseParallelGC -cp tla2tools.jar tlc2.TLC -config DistributedX108_standalone.cfg DistributedX108_standalone.tla
+Paramètres: FMax=1 (N=4 nœuds, jusqu'à 1 byzantin), TauMax=3, ElapsedMin=-1, ElapsedMax=5
+States generated : 1,255,520
+Distinct states  : 1,120
+Duration         : 17s
+Model checking completed. No error has been found.
+EXIT_CODE: 0
+
+========================================================
+9. LEAN 4 — lake build
+========================================================
+Commande : lake build (depuis proofs/lean/)
+Lean version: 4.28.0
+sorry count : 0 (grep -rn "sorry" proofs/lean/ → aucun résultat)
+
+Build completed successfully (0 jobs).
+EXIT_CODE: 0
+
+========================================================
+10. BOOTSTRAP GLOBAL — bash bootstrap.sh
+========================================================
+Commande : bash bootstrap.sh
+
+[1/5] Python deps...        OK
+[2/5] Pipeline trading...   ALLOW ✓
+[3/5] pytest tests/...      12/12 PASS ✓
+[4/5] verify_all.py...      PASS ✓
+[5/5] verify_merkle.py...   VALID ✓
+
+ALL CHECKS COMPLETE
+EXIT_CODE: 0
+
+========================================================
+VERDICT FINAL v1.3.0
+========================================================
+
+A. VÉRIFIÉ EN RÉEL — FULL PASS
+  ✅ pnpm test vitest              39/39 PASS
+  ✅ pytest -q tests/              12/12 PASS
+  ✅ Pipeline trading              ALLOW
+  ✅ Pipeline bank normal          ALLOW
+  ✅ Pipeline bank suspicious      BLOCK (FRAUD_PATTERN)
+  ✅ Pipeline ecom                 ALLOW
+  ✅ verify_all.py                 PASS (exit 0)
+  ✅ openssl ts -verify (v1.0)     Verification: OK
+  ✅ openssl ts -verify (v1.1.0)   Verification: OK
+  ✅ Consensus in-process          PASS — fail-closed VERIFIED
+  ✅ Adversarial A1 (1M paires)    PASS — 0 violation G3
+  ✅ Adversarial A2 (144 probes)   PASS — 0 flip boundary
+  ✅ Adversarial B1 (1M probes)    PASS — 0 collision Merkle
+  ✅ Adversarial C1 (3 attaques)   PASS — 3/3 détectés
+  ✅ Adversarial D1 (141 cas)      PASS — 0 violation fail-closed
+  ✅ Adversarial E1 (5 tampons)    PASS — 5/5 détectés
+  ✅ TLC X108.tla                  No error (97 656 états)
+  ✅ TLC DistributedX108.tla       No error (1 255 520 états)
+  ✅ Lean 4 lake build             Build completed (0 sorry)
+  ✅ bootstrap.sh                  ALL CHECKS COMPLETE
+
+B. VÉRIFIÉ MAIS PARTIEL
+  ⚠️ Consensus HTTP multi-processus  Démo in-process PASS
+                                      Docker requis pour 4 ports FastAPI réels
+
+C. NON VÉRIFIÉ / NON REJOUÉ
+  — (aucun point restant ouvert)
+
+========================================================

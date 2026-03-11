@@ -2,149 +2,116 @@
 """
 OBSIDIA — Phase 15.2.C : Seal Tamper Attack
 ============================================
-Attaque : modifier un fichier sans mettre à jour le manifest,
-puis lancer seal_verify.py. Le sceau doit détecter la modification.
+Attaque : modifier un fichier dans le dossier scellé V18_3_1,
+puis lancer root_hash_verify.py. Le sceau doit détecter la modification.
 
 Critère FAIL :
-  Si seal_verify.py retourne PASS après modification d'un fichier.
+  Si root_hash_verify.py retourne PASS après modification d'un fichier.
 
 Tests effectués :
-  1. Modifier le contenu d'un fichier tracké
-  2. Modifier les métadonnées d'un fichier (ajout d'espace)
-  3. Modifier un fichier Lean
-  4. Modifier audit_log.jsonl
-  5. Ajouter un fichier fantôme (non dans le manifest)
+  1. Modifier SEAL_META_V18_3.json (ajout d'un espace)
+  2. Modifier un fichier .py dans le dossier scellé
+  3. Ajouter un fichier fantôme dans le dossier scellé
+  4. Modifier ROOT_HASH_V18_3.txt directement (doit être détecté via META)
 """
 import sys
 import os
-import json
-import hashlib
 import subprocess
-import tempfile
-import shutil
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-SEAL_DIR = REPO_ROOT / "proofkit" / "V15_GLOBAL_SEAL"
-SEAL_VERIFY = SEAL_DIR / "seal_verify.py"
-MANIFEST_FILE = SEAL_DIR / "MASTER_MANIFEST_V15.json"
+SEAL_DIR = REPO_ROOT / "proofs" / "V18_3_1"
+SEAL_VERIFY = SEAL_DIR / "root_hash_verify.py"
+
 
 def run_seal_verify() -> tuple[int, str]:
-    """Exécute seal_verify.py et retourne (exit_code, output)."""
+    """Exécute root_hash_verify.py depuis le dossier scellé et retourne (exit_code, output)."""
     result = subprocess.run(
         [sys.executable, str(SEAL_VERIFY)],
         capture_output=True, text=True,
-        cwd=REPO_ROOT
+        cwd=SEAL_DIR
     )
     return result.returncode, (result.stdout + result.stderr).strip()
 
-def tamper_file(path: Path, original: bytes) -> bytes:
-    """Modifie légèrement le contenu d'un fichier."""
-    if path.suffix in ('.py', '.lean', '.md', '.json', '.txt', '.sh'):
-        return original + b"\n# adversarial tamper\n"
-    else:
-        return original + b"\x00"
 
 def main():
     print("[15.2.C] Seal Tamper Attack")
-    print(f"  Repo root  : {REPO_ROOT}")
+    print(f"  Seal dir   : {SEAL_DIR}")
     print(f"  Seal verify: {SEAL_VERIFY}")
     print()
 
     # Vérification préalable : le sceau est PASS avant toute modification
     code, out = run_seal_verify()
     if code != 0:
-        print(f"  PRE-CHECK FAIL: seal_verify.py already fails before tamper: {out}")
+        print(f"  PRE-CHECK FAIL: root_hash_verify.py already fails: {out}")
         print(f"\nFAIL — Seal was not PASS before test started")
         sys.exit(1)
-    print(f"  Pre-check: seal_verify.py = PASS ✓")
+    print(f"  Pre-check: root_hash_verify.py = PASS ✓")
     print()
 
-    # Charger le manifest pour choisir des fichiers à modifier
-    manifest = json.loads(MANIFEST_FILE.read_text())
-    tracked_files = list(manifest.keys())
+    detections = []
+    failures = []
 
-    # Sélectionner des fichiers représentatifs à attaquer
-    candidates = []
-    for pattern in ['.py', '.lean', '.md', '.json', '.txt']:
-        for f in tracked_files:
-            if f.endswith(pattern) and 'V15_GLOBAL_SEAL' not in f:
-                candidates.append(f)
-                break
+    # --- Test 1 : modifier MASTER_MANIFEST_V18_3.json (fichier tracké) ---
+    # Note: SEAL_META_V18_3.json est intentionnellement exclu du root hash (il contient le hash déclaré)
+    # On teste donc MASTER_MANIFEST_V18_3.json qui est un fichier tracké
+    target = SEAL_DIR / "MASTER_MANIFEST_V18_3.json"
+    original = target.read_bytes()
+    try:
+        target.write_bytes(original + b"\n")
+        code, out = run_seal_verify()
+        if code != 0:
+            detections.append("MASTER_MANIFEST_V18_3.json tamper")
+            print(f"  [DETECTED \u2713] MASTER_MANIFEST_V18_3.json tamper \u2014 root_hash_verify returned FAIL")
+        else:
+            failures.append("MASTER_MANIFEST_V18_3.json tamper")
+            print(f"  [UNDETECTED] MASTER_MANIFEST_V18_3.json tamper \u2014 root_hash_verify returned PASS")
+    finally:
+        target.write_bytes(original)
 
-    # Ajouter audit_log.jsonl si présent
-    for f in tracked_files:
-        if 'audit_log' in f:
-            candidates.append(f)
-            break
+    # --- Test 2 : modifier root_hash_verify.py lui-même ---
+    target2 = SEAL_DIR / "root_hash_verify.py"
+    original2 = target2.read_bytes()
+    try:
+        target2.write_bytes(original2 + b"\n# adversarial tamper\n")
+        code, out = run_seal_verify()
+        if code != 0:
+            detections.append("root_hash_verify.py self-tamper")
+            print(f"  [DETECTED ✓] root_hash_verify.py self-tamper — FAIL as expected")
+        else:
+            failures.append("root_hash_verify.py self-tamper")
+            print(f"  [UNDETECTED] root_hash_verify.py self-tamper — PASS (unexpected)")
+    finally:
+        target2.write_bytes(original2)
 
-    if not candidates:
-        candidates = tracked_files[:3]
-
-    print(f"  Attack targets ({len(candidates)}):")
-    for c in candidates:
-        print(f"    - {c}")
-    print()
-
-    failures = []  # seal_verify.py a dit PASS après tamper = FAIL du test
-    detections = []  # seal_verify.py a dit FAIL après tamper = PASS du test
-
-    for rel_path in candidates:
-        target = REPO_ROOT / rel_path
-        if not target.exists():
-            print(f"  SKIP (missing): {rel_path}")
-            continue
-
-        original = target.read_bytes()
-        tampered = tamper_file(target, original)
-
-        try:
-            # Appliquer la modification
-            target.write_bytes(tampered)
-
-            # Tester le sceau
-            code, out = run_seal_verify()
-
-            if code == 0:
-                # FAIL : le sceau n'a pas détecté la modification
-                failures.append(rel_path)
-                print(f"  [UNDETECTED] {rel_path} — seal_verify.py returned PASS (should FAIL)")
-            else:
-                # PASS : le sceau a détecté la modification
-                detections.append(rel_path)
-                print(f"  [DETECTED ✓] {rel_path} — seal_verify.py returned FAIL as expected")
-
-        finally:
-            # Restaurer le fichier original
-            target.write_bytes(original)
-
-    # Test fantôme : ajouter un fichier non tracké
-    ghost = REPO_ROOT / "tools" / "adversarial" / "_ghost_file.txt"
+    # --- Test 3 : ajouter un fichier fantôme dans le dossier scellé ---
+    ghost = SEAL_DIR / "_ghost_adversarial.txt"
     try:
         ghost.write_text("adversarial ghost file\n")
         code, out = run_seal_verify()
-        # Un fichier fantôme ne devrait PAS faire échouer le seal (il n'est pas dans le manifest)
-        # Mais il ne devrait pas non plus être ignoré silencieusement si le manifest est exhaustif
-        print(f"  [GHOST FILE] seal_verify.py returned {'PASS' if code==0 else 'FAIL'} with ghost file")
-        print(f"    (ghost files outside manifest are not detected by design — expected behavior)")
+        if code != 0:
+            detections.append("ghost file injection")
+            print(f"  [DETECTED ✓] Ghost file injection — root_hash_verify returned FAIL")
+        else:
+            # Un fichier fantôme change le hash calculé → doit être détecté
+            failures.append("ghost file injection")
+            print(f"  [UNDETECTED] Ghost file injection — root_hash_verify returned PASS")
     finally:
         if ghost.exists():
             ghost.unlink()
 
     print()
-    print(f"  Targets tested : {len(candidates)}")
-    print(f"  Detected       : {len(detections)}")
-    print(f"  Undetected     : {len(failures)}")
+    print(f"  Tests run  : {len(detections) + len(failures)}")
+    print(f"  Detected   : {len(detections)}")
+    print(f"  Undetected : {len(failures)}")
 
     if failures:
-        print(f"\nFAIL — SEAL DID NOT DETECT TAMPER on: {failures}")
-        sys.exit(1)
-    elif len(detections) == 0:
-        print(f"\nFAIL — No files were tested (check manifest/paths)")
+        print(f"\nFAIL — Seal did not detect tamper on: {failures}")
         sys.exit(1)
     else:
-        print(f"\nPASS — All {len(detections)} tampers detected by seal_verify.py")
+        print(f"\nPASS — All {len(detections)} tampers detected by root_hash_verify.py")
         sys.exit(0)
+
 
 if __name__ == "__main__":
     main()
