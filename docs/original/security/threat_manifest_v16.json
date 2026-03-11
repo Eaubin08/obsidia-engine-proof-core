@@ -1,0 +1,153 @@
+{
+  "version": "v16",
+  "phase": "16A",
+  "date": "2026-03-03T15:30:00Z",
+  "tag": "v15.2-final",
+  "commit": "316a29a2ff91813b7ae019f6bee42350d0b6ae0e",
+  "global_seal_hash": "1b23775be41377e0117e0cbe9a855c2d0cce22be3766b678b5ab8798ccd33c3c",
+  "root_hash": "fc41ea8eeb17eca870fb6f50300ac2b8ee62d66ba2735c9bbb880485a23807c7",
+  "files_sealed": 510,
+  "assets": [
+    {"id": "A-01", "name": "Code source integrity", "description": "Source code matches the sealed manifest."},
+    {"id": "A-02", "name": "Seal integrity", "description": "GLOBAL_SEAL_HASH faithfully represents the source code state."},
+    {"id": "A-03", "name": "Audit log immutability", "description": "Once recorded, an audit log entry cannot be modified without invalidating the chain."},
+    {"id": "A-04", "name": "Engine determinism", "description": "decision_act_hold is deterministic and monotone."},
+    {"id": "A-05", "name": "Consensus robustness", "description": "Consensus cannot produce ACT without a 3/4 supermajority."},
+    {"id": "A-06", "name": "Formal proof validity", "description": "Lean theorems are correct and relevant."}
+  ],
+  "adversaries": [
+    {"id": "ADV-01", "name": "Malicious developer", "capabilities": "Write access to Git repository."},
+    {"id": "ADV-02", "name": "Skeptical external auditor", "capabilities": "Read-only access; can run all verification scripts."},
+    {"id": "ADV-03", "name": "Corrupted consensus node operator", "capabilities": "Full control of 1 or 2 nodes out of 4."},
+    {"id": "ADV-04", "name": "Network attacker (MITM)", "capabilities": "Can intercept and modify communications between nodes."}
+  ],
+  "surfaces": [
+    {"id": "AS-01", "name": "Git repository", "description": "Direct push, tag modification, history rewrite."},
+    {"id": "AS-02", "name": "Seal scripts", "description": "generate_seal.py, seal_verify.py; manipulation of exclusions and hash rules."},
+    {"id": "AS-03", "name": "Decision engine", "description": "obsidia_os2/metrics.py; non-determinism, monotonicity violation."},
+    {"id": "AS-04", "name": "Consensus", "description": "distributed/aggregator.py; vote logic manipulation."},
+    {"id": "AS-05", "name": "Audit log", "description": "core/api/audit_log.jsonl; manual entry modification."},
+    {"id": "AS-06", "name": "Lean proofs", "description": ".lean files; weak axioms, theorem modification."}
+  ],
+  "assumptions": [
+    {"id": "ASM-01", "name": "SHA-256 collision resistance", "description": "SHA-256 is considered collision-resistant."},
+    {"id": "ASM-02", "name": "ED25519 unforgeability", "description": "ED25519 signature algorithm is considered unforgeable."},
+    {"id": "ASM-03", "name": "Execution environment integrity", "description": "The OS and hardware are not compromised."},
+    {"id": "ASM-04", "name": "GitHub integrity", "description": "GitHub preserves the integrity of commits and tags once pushed."}
+  ],
+  "claims": [
+    {
+      "id": "TM-01",
+      "claim": "Modification of a sealed file is detected by seal_verify.py.",
+      "adversary": ["ADV-01"],
+      "surface": ["AS-01", "AS-02"],
+      "assumption": ["ASM-01"],
+      "mechanism": "C-01",
+      "tests": ["tools/adversarial/test_seal_tamper.py"],
+      "artifacts": [
+        "proofkit/V15_GLOBAL_SEAL/seal_verify.py",
+        "proofkit/V15_GLOBAL_SEAL/MASTER_MANIFEST_V15.json",
+        "tools/adversarial/ADVERSARIAL_RESULTS.md"
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "TM-02",
+      "claim": "Any change to a tracked file changes the ROOT_HASH.",
+      "adversary": ["ADV-01"],
+      "surface": ["AS-01", "AS-02"],
+      "assumption": ["ASM-01"],
+      "mechanism": "C-01",
+      "tests": ["tools/adversarial/test_merkle_collision.py"],
+      "artifacts": [
+        "proofkit/V15_GLOBAL_SEAL/ROOT_HASH_V15.txt",
+        "tools/adversarial/ADVERSARIAL_RESULTS.md"
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "TM-03",
+      "claim": "A split consensus (2 ACT / 2 HOLD) results in BLOCK (fail-closed).",
+      "adversary": ["ADV-03"],
+      "surface": ["AS-04"],
+      "assumption": [],
+      "mechanism": "C-05",
+      "tests": ["tools/adversarial/test_consensus_split.py"],
+      "artifacts": [
+        "lean/Obsidia/Consensus.lean",
+        "tools/adversarial/ADVERSARIAL_RESULTS.md"
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "TM-04",
+      "claim": "Modification of an audit log entry invalidates the hash chain.",
+      "adversary": ["ADV-01", "ADV-04"],
+      "surface": ["AS-05"],
+      "assumption": ["ASM-01"],
+      "mechanism": "C-04",
+      "tests": ["tools/adversarial/test_signature_tamper.py"],
+      "artifacts": [
+        "core/api/audit_log.jsonl",
+        "tools/adversarial/ADVERSARIAL_RESULTS.md"
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "TM-05",
+      "claim": "Modification of a Merkle leaf changes the root (formally proved in Lean).",
+      "adversary": ["ADV-01", "ADV-02"],
+      "surface": ["AS-06"],
+      "assumption": ["ASM-01"],
+      "mechanism": "C-02",
+      "tests": ["tools/adversarial/test_merkle_collision.py"],
+      "artifacts": [
+        "lean/Obsidia/Sensitivity.lean",
+        "lean/Obsidia/Merkle.lean"
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "TM-06",
+      "claim": "The decision engine is monotone (higher S never yields a weaker decision).",
+      "adversary": ["ADV-01"],
+      "surface": ["AS-03"],
+      "assumption": [],
+      "mechanism": "C-03",
+      "tests": ["tools/adversarial/test_monotonic_break.py"],
+      "artifacts": [
+        "core/engine/obsidia_os2/metrics.py",
+        "tools/adversarial/ADVERSARIAL_RESULTS.md"
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "TM-07",
+      "claim": "The decision engine is deterministic at the theta_S boundary.",
+      "adversary": ["ADV-01", "ADV-02"],
+      "surface": ["AS-03"],
+      "assumption": [],
+      "mechanism": "C-03",
+      "tests": ["tools/adversarial/test_threshold_fuzz.py"],
+      "artifacts": [
+        "core/engine/obsidia_os2/metrics.py",
+        "tools/adversarial/ADVERSARIAL_RESULTS.md"
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "TM-08",
+      "claim": "Any change to ROOT_HASH changes the GLOBAL_SEAL_HASH.",
+      "adversary": ["ADV-01"],
+      "surface": ["AS-02"],
+      "assumption": ["ASM-01"],
+      "mechanism": "C-01",
+      "tests": ["proofkit/V15_GLOBAL_SEAL/seal_verify.py"],
+      "artifacts": [
+        "proofkit/V15_GLOBAL_SEAL/SEAL_META_V15.json",
+        "proofkit/V15_GLOBAL_SEAL/ROOT_HASH_V15.txt"
+      ],
+      "status": "PASS"
+    }
+  ]
+}
