@@ -1,0 +1,9 @@
+{
+  "session_id": "S001",
+  "cart_value": 299.0,
+  "items_count": 3,
+  "customer_history_score": 0.85,
+  "stock_available": true,
+  "fraud_risk_score": 0.05,
+  "delivery_delay_days": 2
+}

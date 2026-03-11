@@ -1,0 +1,47 @@
+{
+  "name": "OBSIDIA_ENGINE_PROOF_CORE",
+  "version": "1.0.0",
+  "date": "2026-03-11",
+  "status": "partial — engine executable, tests passing, formal proof incomplete",
+  "sources": [
+    {
+      "repo": "Eaubin08/Obsidia-lab-trad",
+      "commit": "3ea972c",
+      "paths": [
+        "core/engine/obsidia_kernel/",
+        "core/engine/obsidia_runtime/",
+        "core/tests/",
+        "lib/core/",
+        "lib/gates/",
+        "lib/features/",
+        "proofkit/"
+      ]
+    },
+    {
+      "repo": "Eaubin08/Obsidia-lab-trad (os4-platform)",
+      "commit": "3ea972c",
+      "paths": [
+        "os4-platform/server/python_agents/",
+        "os4-platform/server/engines/",
+        "os4-platform/server/canonical/",
+        "os4-platform/server/engines.test.ts",
+        "os4-platform/server/canonical_components.test.ts"
+      ]
+    }
+  ],
+  "components": {
+    "kernel": "obsidia_kernel v2 (kernel.py + contract.py)",
+    "runtime": "obsidia_runtime (engine_runtime.py + engine_final.py)",
+    "agents": "51 agents — Trading(10) + Bank(8) + Ecom(6) + Meta(10) + base layers(17)",
+    "governance": "Guard X-108 (guard.py) + contracts.py + aggregation.py",
+    "automation": "run_pipeline.py CLI + canonicalPipeline.ts",
+    "tests_python": "6 invariants + 7 fonctionnels = 13 tests PASS",
+    "tests_typescript": "45/45 Vitest PASS"
+  },
+  "invariants_proven": ["D1", "E2", "G1", "G2", "G3", "SIM-D1", "SIM-H1"],
+  "invariants_implemented_not_tested": ["G-X108-1", "G-X108-2", "G-X108-3", "G-X108-4"],
+  "not_proven": ["Lean4_formal_proof", "TLA+_model_checking", "non_anticipation_formal"],
+  "hash_method": "SHA-256",
+  "python_version": "3.11",
+  "node_version": "22.13.0"
+}

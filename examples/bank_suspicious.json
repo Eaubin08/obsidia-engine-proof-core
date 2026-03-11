@@ -1,0 +1,12 @@
+{
+  "account_id": "ACC_SUSPECT_001",
+  "balance": 12000.0,
+  "transactions": [
+    {"amount": 8000.0, "type": "debit", "category": "wire_transfer"},
+    {"amount": 200.0, "type": "debit", "category": "atm"}
+  ],
+  "credit_score": 580,
+  "account_age_days": 30,
+  "fraud_flags": ["UNUSUAL_AMOUNT"],
+  "reserve_ratio": 0.05
+}

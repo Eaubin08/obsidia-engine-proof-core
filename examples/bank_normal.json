@@ -1,0 +1,12 @@
+{
+  "account_id": "ACC001",
+  "balance": 50000.0,
+  "transactions": [
+    {"amount": 500.0, "type": "debit", "category": "purchase"},
+    {"amount": 2000.0, "type": "credit", "category": "salary"}
+  ],
+  "credit_score": 720,
+  "account_age_days": 365,
+  "fraud_flags": [],
+  "reserve_ratio": 0.1
+}
