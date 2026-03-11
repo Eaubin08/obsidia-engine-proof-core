@@ -1,0 +1,176 @@
+=== OBSIDIA ENGINE PROOF CORE v1.2.0 — LOG D'EXÉCUTION FINAL ===
+Date: Wed Mar 11 19:28:51 UTC 2026
+
+=== 1. VERSIONS ===
+v22.13.0
+10.30.3
+Python 3.11.0rc1
+
+=== 2. pnpm test (vitest) ===
+
+> react-example@0.0.0 test /home/ubuntu/obsidia-engine-proof-core
+> vitest run tests/engines.test.ts tests/canonical_components.test.ts
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/ubuntu/obsidia-engine-proof-core[39m
+
+ [32m✓[39m tests/canonical_components.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/engines.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m39 passed[39m[22m[90m (39)[39m
+[2m   Start at [22m 15:28:52
+[2m   Duration [22m 487ms[2m (transform 215ms, setup 0ms, import 371ms, tests 72ms, environment 0ms)[22m
+
+EXIT_CODE:0
+
+=== 3. pytest -q tests/ ===
+............                                                             [100%]
+12 passed in 0.05s
+EXIT_CODE:0
+
+=== 4. PIPELINES AGENTS ===
+--- trading bullish ---
+{"domain": "trading", "market_verdict": "EXECUTE_LONG", "confidence": 0.6297106606246794, "contradictions": [], "unknowns": [], "risk_flags": [], "x108_gate": "ALLOW", "reason_code": "GUARD_ALLOW", "severity": "S1", "decision_id": "trading-e58dba8c3b06", "trace_id": "bea508c3-28ed-44e9-ac26-bbbc22f70d78", "ticket_required": true, "ticket_id": "332cf96ad7604f70", "attestation_ref": "31ae74165752d5dc110baa21", "source": "canonical_framework", "evidence_refs": ["a298ea5bb5aff080", "33f33e45da4a63a1", "9fe4ad1c4c898fea", "eb88d9685d0e8122", "fbc2298bd11c69aa", "16348bb168a0319b", "206bb3dd51548ddd", "5675b929705d2ed3", "692877ffaca53532", "9f4d2ccda91a75c6", "29b53c3375cd3f6a", "87b1043af13507bf", "8981ea5d07293292", "a42bbe3b0bcf5417", "2681cb9872fe6c62", "c343721cb1ac2b2c", "f0c0a03ee1d0c379", "meta:UnknownsAgent", "meta:ConflictResolutionAgent", "meta:PolicyScopeAgent", "meta:TicketReadinessAgent", "meta:TraceIntegrityAgent", "meta:AttestationReadinessAgent", "meta:HumanOverrideEligibilityAgent", "meta:SeverityClassifierAgent", "meta:ReplayConsistencyAgent", "meta:ProofConsistencyAgent"], "metrics": {"buy_score": 4.862960620406634, "sell_score": 0.0, "hold_score": 2.8595712096604116, "proof_ready": true, "deterministic": true}, "raw_engine": {"domain": "trading", "agent_votes": ["MarketDataAgent", "LiquidityAgent", "VolatilityAgent", "MacroAgent", "CorrelationAgent", "EventAgent", "MomentumAgent", "MeanReversionAgent", "BreakoutAgent", "PatternAgent", "SentimentAgent", "PredictionAgent", "PortfolioAgent", "ExecutionQualityAgent", "RegimeShiftAgent", "PortfolioStressAgent", "ProofConsistencyAgent"], "vote_count": 17}}
+EXIT:0
+--- bank normal ---
+{"domain": "bank", "market_verdict": "AUTHORIZE", "confidence": 0.6459227467811159, "contradictions": [], "unknowns": [], "risk_flags": [], "x108_gate": "ALLOW", "reason_code": "GUARD_ALLOW", "severity": "S1", "decision_id": "bank-b54320ff9e09", "trace_id": "1fa5c739-e38b-4130-84a8-542661b80092", "ticket_required": true, "ticket_id": "832e8fd9ac41466e", "attestation_ref": "e2c950dcce4f2b31cfc3466c", "source": "canonical_framework", "evidence_refs": ["85da20940a122194", "3854d76626f7bcdf", "842f4afe9eda885c", "775e89e80ef62cbd", "55f9401a587a8d48", "78ad2dcbd2efd8e9", "858546dcd8ae6aee", "298ac5fd82063ca1", "0975fdd1663db3fe", "b8bf6af2f73dfb06", "b4414612209e2271", "712055fea8219a2c", "meta:UnknownsAgent", "meta:ConflictResolutionAgent", "meta:PolicyScopeAgent", "meta:TicketReadinessAgent", "meta:TraceIntegrityAgent", "meta:AttestationReadinessAgent", "meta:HumanOverrideEligibilityAgent", "meta:SeverityClassifierAgent", "meta:ReplayConsistencyAgent", "meta:ProofConsistencyAgent"], "metrics": {"authorize_score": 3.0100000000000002, "analyze_score": 1.65, "block_score": 0.0, "proof_ready": true, "deterministic": true}, "raw_engine": {"domain": "bank", "agent_votes": ["TransactionContextAgent", "CounterpartyAgent", "LiquidityExposureAgent", "BehaviorShiftAgent", "FraudPatternAgent", "LimitPolicyAgent", "AffordabilityAgent", "TemporalUrgencyAgent", "IdentityMismatchAgent", "NarrativeConflictAgent", "RecoveryPathAgent", "BankProofAgent"], "vote_count": 12}}
+EXIT:0
+--- bank suspicious ---
+{"domain": "bank", "market_verdict": "ANALYZE", "confidence": 0.7478797224363917, "contradictions": ["URGENT_BEHAVIOR", "IDENTITY_CONTEXT_MISMATCH", "NARRATIVE_CONFLICT", "URGENT_BEHAVIOR", "IDENTITY_CONTEXT_MISMATCH", "NARRATIVE_CONFLICT"], "unknowns": ["TEMPORAL_LOCK_NOT_MATURE", "RECENT_FAILED_ATTEMPTS", "TEMPORAL_LOCK_NOT_MATURE", "RECENT_FAILED_ATTEMPTS", "TICKET_NOT_READY"], "risk_flags": ["CASH_PRESSURE", "FRAUD_PATTERN", "LIMIT_PRESSURE"], "x108_gate": "BLOCK", "reason_code": "CONTRADICTION_THRESHOLD_REACHED", "severity": "S4", "decision_id": "bank-2e7b6862d786", "trace_id": "eade6883-321c-4f47-88be-4a2731807c31", "ticket_required": false, "ticket_id": null, "attestation_ref": "c4480dd77741ddbee1f4e393", "source": "canonical_framework", "evidence_refs": ["89d0e8b00ebd5793", "574de88b22d9b884", "d82740597ad0bac3", "7c2ab8a13a3d02a0", "2516af0aff35a672", "a42c61d8d3046ac4", "1863a3a8e39a3032", "7fc63e88d548e9c4", "93d96adbf9c4c78e", "5672f4c1df2f8357", "b4414612209e2271", "8f67e24c3b017aca", "meta:UnknownsAgent", "meta:ConflictResolutionAgent", "meta:PolicyScopeAgent", "meta:TicketReadinessAgent", "meta:TraceIntegrityAgent", "meta:AttestationReadinessAgent", "meta:HumanOverrideEligibilityAgent", "meta:SeverityClassifierAgent", "meta:ReplayConsistencyAgent", "meta:ProofConsistencyAgent"], "metrics": {"authorize_score": 0.0, "analyze_score": 6.466666666666667, "block_score": 2.18, "proof_ready": true, "deterministic": true}, "raw_engine": {"domain": "bank", "agent_votes": ["TransactionContextAgent", "CounterpartyAgent", "LiquidityExposureAgent", "BehaviorShiftAgent", "FraudPatternAgent", "LimitPolicyAgent", "AffordabilityAgent", "TemporalUrgencyAgent", "IdentityMismatchAgent", "NarrativeConflictAgent", "RecoveryPathAgent", "BankProofAgent"], "vote_count": 12}}
+EXIT:0
+--- ecom normal ---
+{"domain": "ecom", "market_verdict": "PAY", "confidence": 1.0, "contradictions": [], "unknowns": [], "risk_flags": [], "x108_gate": "ALLOW", "reason_code": "GUARD_ALLOW", "severity": "S0", "decision_id": "ecom-9c7e50d6c2f6", "trace_id": "9ea82a05-b0ce-4591-86df-b8ba3ae3787b", "ticket_required": true, "ticket_id": "ec81ecd47bcc450e", "attestation_ref": "a461e345b6d069652adb8678", "source": "canonical_framework", "evidence_refs": ["c4e4bb63a0d63dcb", "0e6c1999d407efdd", "799c337ed3adc7d5", "f5ff2a5e07caabc9", "a44992cd0658b6d9", "738817b6eb2b664e", "d9c59dda8805214e", "60bc659ab03f47ef", "95f8f7c176838f69", "e09bdadbf3a259f8", "74a7a766f510ba85", "dddad259354bdc5e", "meta:UnknownsAgent", "meta:ConflictResolutionAgent", "meta:PolicyScopeAgent", "meta:TicketReadinessAgent", "meta:TraceIntegrityAgent", "meta:AttestationReadinessAgent", "meta:HumanOverrideEligibilityAgent", "meta:SeverityClassifierAgent", "meta:ReplayConsistencyAgent", "meta:ProofConsistencyAgent"], "metrics": {"pay_score": 6.9799999999999995, "wait_score": 0.0, "refuse_score": 0.0, "proof_ready": true, "deterministic": true}, "raw_engine": {"domain": "ecom", "agent_votes": ["TrafficQualityAgent", "BasketIntentAgent", "OfferHealthAgent", "CustomerTrustAgent", "ConversionReadinessAgent", "MarginProtectionAgent", "ROASRealityAgent", "FulfillmentRiskAgent", "IntentConflictAgent", "CheckoutFrictionAgent", "MerchantPolicyAgent", "EcomProofAgent"], "vote_count": 12}}
+EXIT:0
+
+=== 5. verify_all.py ===
+PASS
+EXIT_CODE:0
+
+=== 6. RFC 3161 — sceau original (3 mars 2026) ===
+Using configuration from /usr/lib/ssl/openssl.cnf
+Verification: OK
+EXIT:0
+
+=== 7. RFC 3161 — sceau v1.1.0 (11 mars 2026) ===
+Using configuration from /usr/lib/ssl/openssl.cnf
+Warning: certificate from 'proofs/anchors/freetsa_tsa.crt' with subject '/O=Free TSA/OU=TSA/description=This certificate digitally signs documents and time stamp requests made using the freetsa.org online services/CN=www.freetsa.org/emailAddress=busilezas@mailbox.org/L=Wuerzburg/C=DE/ST=Bayern' is not a CA cert
+Verification: OK
+EXIT:0
+
+=== 8. CONSENSUS IN-PROCESS ===
+============================================================
+OBSIDIA Phase 9 — Consensus Multi-Nœuds IN-PROCESS
+4 nœuds Python en threads — sans HTTP, sans Docker
+Propriété testée : fail-closed (3/4 supermajorité)
+============================================================
+
+============================================================
+SCÉNARIO : Consensus normal — signal haussier fort
+============================================================
+
+Votes individuels :
+  [node1] decision=ALLOW     confidence=0.585  risk_flags=[]
+  [node2] decision=ALLOW     confidence=0.585  risk_flags=[]
+  [node3] decision=ALLOW     confidence=0.585  risk_flags=[]
+  [node4] decision=ALLOW     confidence=0.585  risk_flags=[]
+
+CONSENSUS FINAL :
+{
+  "final_decision": "ALLOW",
+  "votes": {
+    "ALLOW": 4
+  },
+  "supermajority": true,
+  "threshold": "3/4",
+  "fail_closed": false
+}
+
+============================================================
+SCÉNARIO : Fail-closed — signal crash (FRAUD_PATTERN attendu)
+============================================================
+
+Votes individuels :
+  [node1] decision=BLOCK     confidence=0.8577  risk_flags=['POOR_EXECUTION', 'PORTFOLIO_STRESS']
+  [node2] decision=BLOCK     confidence=0.8577  risk_flags=['POOR_EXECUTION', 'PORTFOLIO_STRESS']
+  [node3] decision=BLOCK     confidence=0.8577  risk_flags=['POOR_EXECUTION', 'PORTFOLIO_STRESS']
+  [node4] decision=BLOCK     confidence=0.8577  risk_flags=['POOR_EXECUTION', 'PORTFOLIO_STRESS']
+
+CONSENSUS FINAL :
+{
+  "final_decision": "BLOCK",
+  "votes": {
+    "BLOCK": 4
+  },
+  "supermajority": false,
+  "threshold": "3/4",
+  "fail_closed": true,
+  "reason": "No 3/4 supermajority \u2014 fail-closed applies"
+}
+
+============================================================
+RÉSUMÉ
+============================================================
+  ✓ PASS  Consensus normal — signal haussier fort
+         → decision=ALLOW (attendu=ALLOW) | fail_closed=False (attendu=False)
+  ✓ PASS  Fail-closed — signal crash (FRAUD_PATTERN attendu)
+         → decision=BLOCK (attendu=BLOCK) | fail_closed=True (attendu=True)
+
+Propriété fail-closed : VERIFIED
+
+RÉSULTAT GLOBAL : PASS
+EXIT_CODE:0
+
+=== 9. bootstrap.sh ===
+[1m═══════════════════════════════════════════════════════[0m
+[1m  OBSIDIA ENGINE PROOF CORE — Bootstrap & Verification  [0m
+[1m═══════════════════════════════════════════════════════[0m
+
+[1;33m▶[0m Installing Python dependencies...
+[0;32m✓[0m Python dependencies installed
+
+[1;33m▶[0m Installing Node.js dependencies...
+[0;32m✓[0m Node.js dependencies installed
+
+[1;33m▶[0m Running Python tests (pytest)...
+............                                                             [100%]
+12 passed in 0.04s
+[0;32m✓[0m Python tests PASS
+
+[1;33m▶[0m Running TypeScript tests (vitest)...
+
+> react-example@0.0.0 test /home/ubuntu/obsidia-engine-proof-core
+> vitest run tests/engines.test.ts tests/canonical_components.test.ts
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/ubuntu/obsidia-engine-proof-core[39m
+
+ [32m✓[39m tests/canonical_components.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/engines.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m39 passed[39m[22m[90m (39)[39m
+[2m   Start at [22m 15:28:57
+[2m   Duration [22m 413ms[2m (transform 182ms, setup 0ms, import 300ms, tests 62ms, environment 0ms)[22m
+
+[0;32m✓[0m TypeScript tests PASS
+
+[1;33m▶[0m Running pipeline smoke tests...
+  Trading (bullish)    → ALLOW
+  Bank (normal)        → ALLOW
+  Bank (suspicious)    → BLOCK
+  Ecom (normal)        → ALLOW
+[0;32m✓[0m Pipeline smoke tests PASS
+
+[1;33m▶[0m Verifying Merkle root...
+Merkle root declared: b9ac7a047f846764caebf32edb8ad491a697865530b1386e2080c3f517652bf8
+Format VALID (SHA-256 hex) — full recomputation requires audit_entries in metadata.json
+[0;32m✓[0m Merkle root verified
+
+[1;33m▶[0m Running proofkit verification (V18.7 + V18.8)...
+[0;32m✓[0m Proofkit V18.7 + V18.8 PASS
+
+[1m═══════════════════════════════════════════════════════[0m
+[0;32m[1m  ALL CHECKS COMPLETE[0m
+[1m═══════════════════════════════════════════════════════[0m
+EXIT_CODE:0
