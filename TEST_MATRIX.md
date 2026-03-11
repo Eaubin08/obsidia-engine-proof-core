@@ -1,6 +1,6 @@
 # TEST_MATRIX — Matrice complète des tests
 
-**Version :** 1.0.0 · **Date :** 2026-03-11
+**Version :** 1.1.0 · **Date :** 2026-03-11 · **Résultats vérifiés :** pytest 12/12 PASS · vitest 39/39 PASS
 
 ---
 

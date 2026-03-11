@@ -14,8 +14,8 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from python_agents.contracts import TradingState, BankState, EcomState
-from python_agents.protocols import run_trading_pipeline, run_bank_pipeline, run_ecom_pipeline
+from agents.contracts import TradingState, BankState, EcomState
+from agents.protocols import run_trading_pipeline, run_bank_pipeline, run_ecom_pipeline
 
 def envelope_to_dict(env) -> dict:
     """Convert CanonicalDecisionEnvelope dataclass to JSON-serializable dict."""

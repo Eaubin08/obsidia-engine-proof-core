@@ -5,8 +5,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from obsidia_canonical_agents import TradingState, BankState, EcomState
-from obsidia_canonical_agents.protocols import run_trading_pipeline, run_bank_pipeline, run_ecom_pipeline, build_agent_registry
+from agents import TradingState, BankState, EcomState
+from agents.protocols import run_trading_pipeline, run_bank_pipeline, run_ecom_pipeline, build_agent_registry
 
 
 def make_trading_state():

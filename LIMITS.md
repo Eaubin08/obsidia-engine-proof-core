@@ -1,8 +1,22 @@
 # LIMITS — Ce qui n'est pas encore fermé
 
-**Version :** 1.0.0 · **Date :** 2026-03-11
+**Version :** 1.1.0 · **Date :** 2026-03-11
 
 Ce fichier liste sans exagération tout ce qui reste partiel, non prouvé, ou dépendant d'intégrations futures. Aucun composant listé ici ne doit être présenté comme prouvé.
+
+---
+
+## 0 — Comportement attendu (non une erreur)
+
+### 0.1 — root_hash_verify V18.3.1 : mismatch attendu
+
+**Statut :** Le script `proofs/V18_3_1/root_hash_verify.py` échoue avec un hash différent. **C'est le comportement correct.**
+
+Le hash déclaré dans `ROOT_HASH_V18_3.txt` (`6cd9f9e0...`) correspond à l'état exact du repo au moment du scellement original le **3 mars 2026**. Depuis, des fichiers ont été ajoutés dans ce dossier. Tout sceau d'intégrité doit détecter cette modification — c'est précisément son rôle.
+
+**Ce qu'il ne faut pas faire :** Modifier `ROOT_HASH_V18_3.txt` pour faire passer le test. Ce serait falsifier une preuve cryptographique.
+
+**Ce qu'il faut faire :** Vérifier le sceau original avec `openssl ts -verify` sur l'ancre RFC 3161 dans `proofs/anchors/`.
 
 ---
 

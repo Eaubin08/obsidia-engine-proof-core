@@ -1,0 +1,22 @@
+# OBSIDIA ENGINE PROOF CORE — Python dependencies
+# Install: pip install -r requirements.txt
+#
+# Python >= 3.11 required
+
+# ── Tests ──────────────────────────────────────────────────────────────────
+pytest>=7.0
+
+# ── Distributed consensus (distributed/ module) ───────────────────────────
+# Required only for: distributed/test_consensus_local.py
+# Uses FastAPI + uvicorn to simulate 4 local nodes
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+httpx>=0.24.0
+
+# ── Cryptographic verification ─────────────────────────────────────────────
+# Required only for: proofs/verify_decision.py (NaCl signature verification)
+PyNaCl>=1.5.0
+
+# ── Standard library only (no extra install needed) ────────────────────────
+# hashlib, json, subprocess, dataclasses, enum, typing, pathlib, uuid, datetime
+# All used by: agents/, engine/, governance/, proofs/
