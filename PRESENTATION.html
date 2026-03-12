@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Obsidia Engine — Proof Core v1.3.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #0f0f1a;
+      --bg3: #141428;
+      --border: #1e1e3a;
+      --border2: #2a2a50;
+      --accent: #6c63ff;
+      --accent2: #a78bfa;
+      --accent3: #38bdf8;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --text: #e2e8f0;
+      --text2: #94a3b8;
+      --text3: #64748b;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', sans-serif;
+      --display: 'Syne', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.7; overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,15,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: var(--display); font-size: 1.1rem; font-weight: 800; color: var(--accent2); letter-spacing: -0.02em; }
+    .nav-logo span { color: var(--accent3); }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text2); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent2); }
+    .nav-badge { background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; font-family: var(--mono); }
+
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; width: 800px; height: 800px; border-radius: 50%; background: radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.3); border-radius: 999px; padding: 4px 14px; font-size: 0.78rem; font-family: var(--mono); color: var(--accent2); margin-bottom: 2rem; letter-spacing: 0.06em; }
+    .dot-green { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .hero h1 { font-family: var(--display); font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    .hero h1 .line1 { color: var(--text); }
+    .hero h1 .line2 { background: linear-gradient(135deg, var(--accent2), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { max-width: 640px; color: var(--text2); font-size: 1.05rem; line-height: 1.8; margin-bottom: 3rem; }
+    .hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: var(--display); font-size: 2.2rem; font-weight: 800; color: var(--accent2); line-height: 1; }
+    .stat-label { font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.6rem; border-radius: 8px; font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #7c75ff; transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+    .btn-outline:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem; }
+    .section-title { font-family: var(--display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1rem; }
+    .section-desc { color: var(--text2); max-width: 680px; margin-bottom: 3rem; font-size: 1rem; }
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2rem; }
+    .result-item { background: var(--bg2); padding: 1.1rem 1.4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .result-item:hover { background: var(--bg3); }
+    .result-name { font-size: 0.88rem; color: var(--text2); }
+    .result-cmd { font-family: var(--mono); font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; font-family: var(--mono); white-space: nowrap; }
+    .badge-pass { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+    .badge-block { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+    .badge-allow { background: rgba(56,189,248,0.12); color: var(--accent3); border: 1px solid rgba(56,189,248,0.25); }
+    .badge-warn { background: rgba(245,158,11,0.12); color: var(--yellow); border: 1px solid rgba(245,158,11,0.25); }
+
+    .os-layers { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
+    .os-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; position: relative; overflow: hidden; transition: border-color 0.2s; }
+    .os-card:hover { border-color: var(--border2); }
+    .os-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .os-card.os0::before { background: linear-gradient(90deg, #6c63ff, #a78bfa); }
+    .os-card.os1::before { background: linear-gradient(90deg, #38bdf8, #6c63ff); }
+    .os-card.os2::before { background: linear-gradient(90deg, #22c55e, #38bdf8); }
+    .os-card.os3::before { background: linear-gradient(90deg, #f59e0b, #22c55e); }
+    .os-num { font-family: var(--mono); font-size: 0.72rem; color: var(--text3); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .os-name { font-family: var(--display); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .os-desc { font-size: 0.85rem; color: var(--text2); line-height: 1.6; }
+    .os-features { margin-top: 1rem; display: flex; flex-direction: column; gap: 4px; }
+    .os-feature { font-size: 0.78rem; color: var(--text3); display: flex; align-items: center; gap: 6px; }
+    .os-feature::before { content: '→'; color: var(--accent); }
+
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 2rem; }
+    .agent-domain { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
+    .agent-domain-name { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent2); margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between; }
+    .agent-count { font-family: var(--mono); font-size: 1.4rem; font-weight: 700; color: var(--text); }
+    .agent-list { font-size: 0.78rem; color: var(--text3); line-height: 1.8; }
+
+    .proof-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; font-size: 0.88rem; }
+    .proof-table th { text-align: left; padding: 0.75rem 1rem; background: var(--bg3); color: var(--text3); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; border-bottom: 1px solid var(--border); }
+    .proof-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .proof-table tr:hover td { background: var(--bg2); }
+    .proof-table tr:last-child td { border-bottom: none; }
+    .invariant-id { font-family: var(--mono); font-size: 0.78rem; color: var(--accent2); font-weight: 600; }
+    .theorem-name { font-family: var(--mono); font-size: 0.78rem; color: var(--accent3); }
+    .proof-stmt { font-size: 0.82rem; color: var(--text2); }
+
+    .code-block { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; font-family: var(--mono); font-size: 0.82rem; color: var(--text2); overflow-x: auto; margin-bottom: 1.5rem; line-height: 1.7; }
+    .code-block .comment { color: var(--text3); }
+    .code-block .cmd { color: var(--accent3); }
+    .code-block .output { color: var(--green); }
+
+    .adv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .adv-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .adv-id { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+    .adv-name { font-weight: 600; font-size: 0.92rem; margin-bottom: 0.5rem; }
+    .adv-scope { font-size: 0.8rem; color: var(--text2); margin-bottom: 0.75rem; }
+    .adv-result { display: flex; align-items: center; justify-content: space-between; }
+    .adv-count { font-family: var(--mono); font-size: 0.78rem; color: var(--text3); }
+
+    .tla-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+    .tla-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .tla-spec { font-family: var(--mono); font-size: 0.88rem; color: var(--accent3); font-weight: 600; margin-bottom: 0.5rem; }
+    .tla-prop { font-size: 0.85rem; color: var(--text2); margin-bottom: 1rem; }
+    .tla-stats { display: flex; gap: 1.5rem; }
+    .tla-stat-num { font-family: var(--display); font-size: 1.6rem; font-weight: 700; color: var(--text); }
+    .tla-stat-label { font-size: 0.72rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .crypto-timeline { display: flex; flex-direction: column; gap: 0; position: relative; margin-bottom: 2rem; }
+    .crypto-timeline::before { content: ''; position: absolute; left: 20px; top: 24px; bottom: 24px; width: 1px; background: var(--border2); }
+    .crypto-item { display: flex; gap: 1.5rem; align-items: flex-start; padding: 1rem 0; }
+    .crypto-dot { width: 40px; height: 40px; border-radius: 50%; background: var(--bg3); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; position: relative; z-index: 1; }
+    .crypto-content { flex: 1; }
+    .crypto-date { font-family: var(--mono); font-size: 0.75rem; color: var(--accent2); margin-bottom: 0.25rem; }
+    .crypto-title { font-weight: 600; font-size: 0.92rem; margin-bottom: 0.25rem; }
+    .crypto-desc { font-size: 0.82rem; color: var(--text2); }
+    .crypto-hash { font-family: var(--mono); font-size: 0.72rem; color: var(--text3); margin-top: 4px; }
+
+    .limits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .limit-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .limit-level { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .limit-level.high { color: var(--red); }
+    .limit-level.medium { color: var(--yellow); }
+    .limit-level.low { color: var(--text3); }
+    .limit-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .limit-desc { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+
+    .persp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .persp-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s; }
+    .persp-card:hover { border-color: var(--border2); }
+    .persp-icon { font-size: 1.6rem; margin-bottom: 0.75rem; }
+    .persp-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; }
+    .persp-desc { font-size: 0.83rem; color: var(--text2); line-height: 1.65; }
+    .persp-actors { margin-top: 0.75rem; font-size: 0.75rem; color: var(--text3); }
+
+    .license-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
+    .license-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+    .license-table td:first-child { color: var(--text2); width: 60%; }
+    .license-table tr:last-child td { border-bottom: none; }
+
+    .file-tree { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; font-family: var(--mono); font-size: 0.82rem; line-height: 2; color: var(--text2); margin-bottom: 2rem; }
+    .file-tree .dir { color: var(--accent3); font-weight: 600; }
+    .file-tree .comment { color: var(--text3); }
+
+    footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; }
+    .footer-logo { font-family: var(--display); font-size: 1.5rem; font-weight: 800; color: var(--accent2); margin-bottom: 0.5rem; }
+    .footer-desc { font-size: 0.85rem; color: var(--text3); margin-bottom: 1.5rem; }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+    .footer-links a { color: var(--text3); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent2); }
+    .footer-copy { font-size: 0.78rem; color: var(--text3); }
+
+    .scroll-line { position: fixed; top: 56px; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent3)); z-index: 200; transition: width 0.1s; width: 0%; }
+    [id] { scroll-margin-top: 72px; }
+    @media (max-width: 768px) { .nav-links { display: none; } .tla-cards { grid-template-columns: 1fr; } .hero-stats { gap: 1.5rem; } }
+  </style>
+</head>
+<body>
+
+<div class="scroll-line" id="scrollLine"></div>
+
+<nav>
+  <div class="nav-logo">Obsidia <span>Engine</span></div>
+  <ul class="nav-links">
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#preuves">Preuves</a></li>
+    <li><a href="#resultats">Résultats</a></li>
+    <li><a href="#adversarial">Adversarial</a></li>
+    <li><a href="#crypto">Cryptographie</a></li>
+    <li><a href="#limites">Limites</a></li>
+    <li><a href="#perspectives">Perspectives</a></li>
+    <li><a href="#licence">Licence</a></li>
+  </ul>
+  <span class="nav-badge">v1.3.0</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag"><span class="dot-green"></span> Exécutable · Auditable · Reproductible</div>
+  <h1>
+    <div class="line1">Obsidia Engine</div>
+    <div class="line2">Proof Core</div>
+  </h1>
+  <p class="hero-sub">Un moteur décisionnel déterministe gouverné par invariants formels. Ses décisions sont auditées cryptographiquement et vérifiables par un tiers indépendant. Chaque propriété est démontrée par des artefacts exécutables — pas seulement affirmée.</p>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">51</div><div class="stat-label">Agents domaine</div></div>
+    <div class="stat-item"><div class="stat-num">39+12</div><div class="stat-label">Tests PASS</div></div>
+    <div class="stat-item"><div class="stat-num">1M+</div><div class="stat-label">Cas adversariaux</div></div>
+    <div class="stat-item"><div class="stat-num">1.25M</div><div class="stat-label">États TLA+ vérifiés</div></div>
+    <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">Sorry Lean 4</div></div>
+  </div>
+  <div class="hero-cta">
+    <a href="https://github.com/Eaubin08/obsidia-engine-proof-core" class="btn btn-primary" target="_blank">↗ GitHub</a>
+    <a href="#resultats" class="btn btn-outline">Voir les résultats</a>
+    <a href="#architecture" class="btn btn-outline">Architecture</a>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<section id="architecture">
+  <div class="section-label">01 — Architecture</div>
+  <h2 class="section-title">4 couches OS + Guard X-108</h2>
+  <p class="section-desc">Le moteur est organisé en quatre versions successives (OS0 → OS3), chacune ajoutant une couche de capacité. Le Guard X-108 est le composant de gouvernance central qui applique les règles de blocage.</p>
+  <div class="os-layers">
+    <div class="os-card os0">
+      <div class="os-num">OS — 0</div>
+      <div class="os-name">Langage IR</div>
+      <div class="os-desc">Définit le langage intermédiaire avec 7 types de nœuds et le validateur de contrat (règles R1–R10).</div>
+      <div class="os-features">
+        <div class="os-feature">VALUE, STATE, READ, WRITE, FLOW, COND, LOOP</div>
+        <div class="os-feature">Sandbox avec isolation et rollback</div>
+        <div class="os-feature">Validation structurelle garantie</div>
+      </div>
+    </div>
+    <div class="os-card os1">
+      <div class="os-num">OS — 1</div>
+      <div class="os-name">Pipeline complet</div>
+      <div class="os-desc">Parse → Validate → X108 check → Décision. La Gate X-108 applique le délai temporel de 108 secondes.</div>
+      <div class="os-features">
+        <div class="os-feature">Intent irréversible → délai 108s obligatoire</div>
+        <div class="os-feature">elapsed=50s, irr=True → HOLD (+58s)</div>
+        <div class="os-feature">Pipeline complet exécutable</div>
+      </div>
+    </div>
+    <div class="os-card os2">
+      <div class="os-num">OS — 2</div>
+      <div class="os-name">Métriques + Seuil</div>
+      <div class="os-desc">Métriques quantitatives et décision par seuil. Modèle formalisé en Lean 4 : <code style="font-family:var(--mono);font-size:0.8em;color:var(--accent3)">decision(m, θ) = ACT si θ ≤ S, HOLD sinon</code>.</div>
+      <div class="os-features">
+        <div class="os-feature">Invariants D1/E2/G1/G2/G3 formalisés</div>
+        <div class="os-feature">Noyau ne produit jamais BLOCK (L11.3)</div>
+        <div class="os-feature">Fuzz 200k cas — 0 violation E2</div>
+      </div>
+    </div>
+    <div class="os-card os3">
+      <div class="os-num">OS — 3</div>
+      <div class="os-name">Composants séparés</div>
+      <div class="os-desc">Séparation des composants, métriques étendues et génération de visualisations SVG des décisions.</div>
+      <div class="os-features">
+        <div class="os-feature">Architecture modulaire</div>
+        <div class="os-feature">Métriques T_mean, H_score, A_score</div>
+        <div class="os-feature">Visualisation SVG des décisions</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:2rem">Guard X-108 — Règles de gouvernance (ordre de priorité)</div>
+  <div class="code-block">
+<span class="comment"># Règle 1 — Délai temporel</span>
+  Intent irréversible + elapsed &lt; 108s → <span class="output">HOLD</span> (délai obligatoire)
+
+<span class="comment"># Règle 2 — Contradictions entre agents</span>
+  Nb contradictions ≥ seuil → <span style="color:var(--red)">BLOCK</span> (CONTRADICTION_THRESHOLD_REACHED)
+
+<span class="comment"># Règle 3 — Flags de risque critiques</span>
+  FRAUD_PATTERN | LIMIT_PRESSURE | CASH_PRESSURE → <span style="color:var(--red)">BLOCK</span>
+
+<span class="comment"># Règle 4 — Seuil de confiance</span>
+  Confiance agrégée &lt; theta_S → <span class="output">HOLD</span>
+
+<span class="comment"># Règle 5 — Non-anticipation (déclaratif)</span>
+  non_anticipation = True → vérifié à la gouvernance
+  </div>
+
+  <div class="section-label" style="margin-top:2rem">51 Agents domaine</div>
+  <div class="agents-grid">
+    <div class="agent-domain">
+      <div class="agent-domain-name">Trading <span class="agent-count">10</span></div>
+      <div class="agent-list">TrendFollower · MomentumAgent · VolatilityAgent<br/>LiquidityAgent · SentimentAgent · RegimeAgent<br/>RiskAgent · ArbitrageAgent · MacroAgent · SignalAgent</div>
+    </div>
+    <div class="agent-domain">
+      <div class="agent-domain-name">Bank <span class="agent-count">8</span></div>
+      <div class="agent-list">IdentityAgent · BehaviorAgent · TransactionAgent<br/>NarrativeAgent · RiskAgent · ComplianceAgent<br/>FraudAgent · LimitAgent</div>
+    </div>
+    <div class="agent-domain">
+      <div class="agent-domain-name">E-commerce <span class="agent-count">6</span></div>
+      <div class="agent-list">CartAgent · PaymentAgent · IdentityAgent<br/>BehaviorAgent · RiskAgent · FraudAgent</div>
+    </div>
+    <div class="agent-domain">
+      <div class="agent-domain-name">Meta <span class="agent-count">10</span></div>
+      <div class="agent-list">ContradictionDetector · ConsensusAgent<br/>AggregationAgent · GovernanceAgent<br/>ProofAgent · AuditAgent · + 4 autres</div>
+    </div>
+    <div class="agent-domain">
+      <div class="agent-domain-name">Guard <span class="agent-count">1</span></div>
+      <div class="agent-list"><strong>Guard X-108</strong> — composant de gouvernance central.<br/>Seul composant autorisé à produire BLOCK.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section id="preuves">
+  <div class="section-label">02 — Preuves formelles</div>
+  <h2 class="section-title">Lean 4 · TLA+ · Proofkit</h2>
+  <p class="section-desc">Trois couches de formalisation complémentaires. Lean 4 prouve les propriétés mathématiques du noyau. TLA+ vérifie le comportement temporel et distribué. Le Proofkit valide les invariants sur des données concrètes.</p>
+
+  <div class="section-label">Invariants Lean 4 — 6 théorèmes, 0 sorry, lake build PASS</div>
+  <table class="proof-table">
+    <thead><tr><th>Invariant</th><th>Théorème Lean 4</th><th>Énoncé</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td><span class="invariant-id">D1</span></td><td><span class="theorem-name">D1_determinism</span></td><td class="proof-stmt">La fonction <code>decision</code> est pure et déterministe — même entrée → même sortie</td><td><span class="badge badge-pass">✓ PROUVÉ</span></td></tr>
+      <tr><td><span class="invariant-id">E2</span></td><td><span class="theorem-name">E2_no_act_below_threshold</span></td><td class="proof-stmt">Jamais <code>ACT</code> avant le seuil theta_S — non-anticipation formelle</td><td><span class="badge badge-pass">✓ PROUVÉ</span></td></tr>
+      <tr><td><span class="invariant-id">G1</span></td><td><span class="theorem-name">G1_act_above_threshold</span></td><td class="proof-stmt">Si <code>theta ≤ S</code> alors <code>decision = ACT</code></td><td><span class="badge badge-pass">✓ PROUVÉ</span></td></tr>
+      <tr><td><span class="invariant-id">G2</span></td><td><span class="theorem-name">G2_boundary_inclusive</span></td><td class="proof-stmt">Si <code>S = theta</code> alors <code>decision = ACT</code> — frontière inclusive</td><td><span class="badge badge-pass">✓ PROUVÉ</span></td></tr>
+      <tr><td><span class="invariant-id">G3</span></td><td><span class="theorem-name">G3_monotonicity</span></td><td class="proof-stmt">Si <code>S₁ ≤ S₂</code> alors <code>decision(S₁) ≤ decision(S₂)</code> — monotonie</td><td><span class="badge badge-pass">✓ PROUVÉ</span></td></tr>
+      <tr><td><span class="invariant-id">L11.3</span></td><td><span class="theorem-name">L11_3_no_block</span></td><td class="proof-stmt">Le noyau OS2 ne produit jamais <code>BLOCK</code> — seul le Guard X-108 peut bloquer</td><td><span class="badge badge-pass">✓ PROUVÉ</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="tla-cards">
+    <div class="tla-card">
+      <div class="tla-spec">X108.tla</div>
+      <div class="tla-prop"><strong>SafetyX108 :</strong> Aucun état atteignable où un intent irréversible obtient <code>ACT</code> avant le délai de 108 secondes.</div>
+      <div class="tla-stats">
+        <div><div class="tla-stat-num">97 656</div><div class="tla-stat-label">États vérifiés</div></div>
+        <div><div class="tla-stat-num">0</div><div class="tla-stat-label">Erreurs</div></div>
+      </div>
+    </div>
+    <div class="tla-card">
+      <div class="tla-spec">DistributedX108.tla</div>
+      <div class="tla-prop"><strong>SafetyDistributed :</strong> Avec N=3f+1 nœuds et jusqu'à f byzantins, la décision globale n'est jamais <code>ACT</code> si la gate doit tenir.</div>
+      <div class="tla-stats">
+        <div><div class="tla-stat-num">1.25M</div><div class="tla-stat-label">États vérifiés</div></div>
+        <div><div class="tla-stat-num">0</div><div class="tla-stat-label">Erreurs</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Proofkit — 3 versions</div>
+  <div class="results-grid">
+    <div class="result-item"><div><div class="result-name">V18.7 — Non-circumvention</div><div class="result-cmd">4 théorèmes E1–E4 + fuzz 200 000 cas</div></div><span class="badge badge-pass">PASS</span></div>
+    <div class="result-item"><div><div class="result-name">V18.8 — Convergence</div><div class="result-cmd">4 propriétés G1–G4 + traces Strasbourg Clock</div></div><span class="badge badge-pass">PASS</span></div>
+    <div class="result-item"><div><div class="result-name">V18.3.1 — Root Seal</div><div class="result-cmd">6 suites de tests scellées (F01-F04, T01-T02, U01-U02)</div></div><span class="badge badge-pass">PASS</span></div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section id="resultats">
+  <div class="section-label">03 — Résultats vérifiés</div>
+  <h2 class="section-title">20 points PASS — log brut disponible</h2>
+  <p class="section-desc">Tous les résultats ont été rejoués en environnement réel le 2026-03-11. Le log brut complet est disponible dans <code style="font-family:var(--mono);font-size:0.85em">EXECUTION_LOG_v1.3.0.txt</code>.</p>
+  <div class="results-grid">
+    <div class="result-item"><div><div class="result-name">Tests Python</div><div class="result-cmd">pytest -q tests/</div></div><span class="badge badge-pass">12/12 PASS</span></div>
+    <div class="result-item"><div><div class="result-name">Tests TypeScript</div><div class="result-cmd">pnpm test (vitest)</div></div><span class="badge badge-pass">39/39 PASS</span></div>
+    <div class="result-item"><div><div class="result-name">Pipeline Trading</div><div class="result-cmd">run_pipeline.py trading</div></div><span class="badge badge-allow">ALLOW</span></div>
+    <div class="result-item"><div><div class="result-name">Pipeline Bank — normal</div><div class="result-cmd">run_pipeline.py bank normal</div></div><span class="badge badge-allow">ALLOW</span></div>
+    <div class="result-item"><div><div class="result-name">Pipeline Bank — suspect</div><div class="result-cmd">run_pipeline.py bank suspicious</div></div><span class="badge badge-block">BLOCK · FRAUD_PATTERN</span></div>
+    <div class="result-item"><div><div class="result-name">Pipeline E-commerce</div><div class="result-cmd">run_pipeline.py ecom</div></div><span class="badge badge-allow">ALLOW</span></div>
+    <div class="result-item"><div><div class="result-name">Proofkit global</div><div class="result-cmd">python3 proofs/verify_all.py</div></div><span class="badge badge-pass">PASS exit 0</span></div>
+    <div class="result-item"><div><div class="result-name">RFC 3161 — sceau original</div><div class="result-cmd">openssl ts -verify (2026-03-03)</div></div><span class="badge badge-pass">Verification: OK</span></div>
+    <div class="result-item"><div><div class="result-name">RFC 3161 — sceau v1.1.0</div><div class="result-cmd">openssl ts -verify (2026-03-11)</div></div><span class="badge badge-pass">Verification: OK</span></div>
+    <div class="result-item"><div><div class="result-name">Consensus fail-closed</div><div class="result-cmd">test_consensus_inprocess.py</div></div><span class="badge badge-pass">VERIFIED</span></div>
+    <div class="result-item"><div><div class="result-name">TLA+ X108</div><div class="result-cmd">TLC — 97 656 états</div></div><span class="badge badge-pass">No error</span></div>
+    <div class="result-item"><div><div class="result-name">TLA+ DistributedX108</div><div class="result-cmd">TLC — 1 255 520 états</div></div><span class="badge badge-pass">No error</span></div>
+    <div class="result-item"><div><div class="result-name">Lean 4 lake build</div><div class="result-cmd">0 sorry — build completed</div></div><span class="badge badge-pass">PASS exit 0</span></div>
+    <div class="result-item"><div><div class="result-name">Bootstrap global</div><div class="result-cmd">bash bootstrap.sh</div></div><span class="badge badge-pass">ALL CHECKS COMPLETE</span></div>
+  </div>
+
+  <div class="section-label">Démarrage rapide</div>
+  <div class="code-block">
+<span class="comment"># Cloner et bootstrapper</span>
+<span class="cmd">git clone https://github.com/Eaubin08/obsidia-engine-proof-core.git</span>
+<span class="cmd">cd obsidia-engine-proof-core && bash bootstrap.sh</span>
+
+<span class="output">[1/5] Python deps...        OK</span>
+<span class="output">[2/5] Pipeline trading...   ALLOW ✓</span>
+<span class="output">[3/5] pytest tests/...      12/12 PASS ✓</span>
+<span class="output">[4/5] verify_all.py...      PASS ✓</span>
+<span class="output">[5/5] verify_merkle.py...   VALID ✓</span>
+<span class="output">ALL CHECKS COMPLETE</span>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section id="adversarial">
+  <div class="section-label">04 — Tests adversariaux</div>
+  <h2 class="section-title">Phase 15.2 — 6 batteries, 1M+ cas</h2>
+  <p class="section-desc">Six batteries de tests adversariaux rejoués en réel le 2026-03-11. Résultat global : <strong>ALL TESTS PASSED — NO STRUCTURAL WEAKNESS DETECTED</strong>.</p>
+  <div class="adv-grid">
+    <div class="adv-card"><div class="adv-id">BATTERIE A1</div><div class="adv-name">Monotonie G3</div><div class="adv-scope">1 000 000 paires aléatoires (S₁ ≤ S₂) — vérifie que decision(S₁) ≤ decision(S₂).</div><div class="adv-result"><span class="adv-count">1 000 000 paires</span><span class="badge badge-pass">0 violation</span></div></div>
+    <div class="adv-card"><div class="adv-id">BATTERIE A2</div><div class="adv-name">Boundary fuzz theta_S</div><div class="adv-scope">144 probes à ±1e-12 autour du seuil theta_S. Aucun flip sémantique à la frontière.</div><div class="adv-result"><span class="adv-count">144 probes</span><span class="badge badge-pass">0 flip</span></div></div>
+    <div class="adv-card"><div class="adv-id">BATTERIE B1</div><div class="adv-name">Collision Merkle SHA-256</div><div class="adv-scope">1 049 881 probes sur l'espace SHA-256 du Merkle Root. Absence de collision.</div><div class="adv-result"><span class="adv-count">1 049 881 probes</span><span class="badge badge-pass">0 collision</span></div></div>
+    <div class="adv-card"><div class="adv-id">BATTERIE C1</div><div class="adv-name">Seal tamper</div><div class="adv-scope">3 types d'attaque sur le sceau V18.3.1 : modification, ajout, suppression partielle.</div><div class="adv-result"><span class="adv-count">3 attaques</span><span class="badge badge-pass">3/3 détectés</span></div></div>
+    <div class="adv-card"><div class="adv-id">BATTERIE D1</div><div class="adv-name">Consensus split</div><div class="adv-scope">141 cas exhaustifs de split de consensus (nœuds byzantins, partitions réseau).</div><div class="adv-result"><span class="adv-count">141 cas</span><span class="badge badge-pass">0 violation</span></div></div>
+    <div class="adv-card"><div class="adv-id">BATTERIE E1</div><div class="adv-name">Signature tamper</div><div class="adv-scope">5 types de modification de la chaîne d'audit : bit flip, troncature, injection, substitution, replay.</div><div class="adv-result"><span class="adv-count">5 types</span><span class="badge badge-pass">5/5 détectés</span></div></div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section id="crypto">
+  <div class="section-label">05 — Ancrage cryptographique</div>
+  <h2 class="section-title">Merkle Root + RFC 3161</h2>
+  <p class="section-desc">L'intégrité du moteur est ancrée par deux mécanismes complémentaires. Le Merkle Root couvre tous les fichiers critiques. L'ancre RFC 3161 établit une preuve temporelle vérifiable par un tiers.</p>
+  <div class="crypto-timeline">
+    <div class="crypto-item">
+      <div class="crypto-dot">🔐</div>
+      <div class="crypto-content">
+        <div class="crypto-date">2026-03-03 · 16:43:06 UTC</div>
+        <div class="crypto-title">Scellement initial — Free TSA</div>
+        <div class="crypto-desc">Premier ancrage RFC 3161 du Merkle Root couvrant 10 entrées d'audit critiques. Vérifiable avec openssl ts -verify.</div>
+        <div class="crypto-hash">TSR : rfc3161_anchor.tsr · Verification: OK</div>
+      </div>
+    </div>
+    <div class="crypto-item">
+      <div class="crypto-dot">🔒</div>
+      <div class="crypto-content">
+        <div class="crypto-date">2026-03-11 · 19:24:45 UTC</div>
+        <div class="crypto-title">Rescellement v1.1.0 — Free TSA</div>
+        <div class="crypto-desc">Nouveau scellement sur l'état complet du repo v1.1.0 (600+ fichiers). Recalcul du Merkle Root après ajout des fichiers TLA+, Lean 4 et adversariaux.</div>
+        <div class="crypto-hash">TSR : rfc3161_v110.tsr · Verification: OK</div>
+      </div>
+    </div>
+    <div class="crypto-item">
+      <div class="crypto-dot">✅</div>
+      <div class="crypto-content">
+        <div class="crypto-date">2026-03-11 — Vérification en réel</div>
+        <div class="crypto-title">openssl ts -verify → Verification: OK (× 2)</div>
+        <div class="crypto-desc">Les deux sceaux ont été vérifiés en réel. La chaîne de confiance Free TSA est intacte. Exit code : 0.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section id="limites">
+  <div class="section-label">06 — Limites déclarées</div>
+  <h2 class="section-title">Ce qui n'est pas encore fermé</h2>
+  <p class="section-desc">Ce projet est honnête sur ce qu'il ne démontre pas encore. Aucune limite n'est masquée. Chaque point est documenté dans <code style="font-family:var(--mono);font-size:0.85em">LIMITS.md</code>.</p>
+  <div class="limits-grid">
+    <div class="limit-card"><div class="limit-level high">Criticité haute</div><div class="limit-title">Données réelles non testées</div><div class="limit-desc">Les pipelines Trading, Bank et Ecom tournent sur des données synthétiques. Le comportement sur des flux de production réels n'est pas couvert.</div></div>
+    <div class="limit-card"><div class="limit-level high">Criticité haute</div><div class="limit-title">Attaques adversariales avancées</div><div class="limit-desc">Les 6 batteries Phase 15.2 ne couvrent pas le fuzzing guidé par couverture, les attaques temporelles, l'injection dans la chaîne d'agents ni l'empoisonnement de métriques.</div></div>
+    <div class="limit-card"><div class="limit-level medium">Criticité moyenne</div><div class="limit-title">Consensus HTTP Docker</div><div class="limit-desc">La démo in-process (4 threads Python) passe. La démo réseau réelle (4 nœuds FastAPI) nécessite Docker. <code style="font-family:var(--mono);font-size:0.85em">docker-compose.yml</code> fourni dans le repo.</div></div>
+    <div class="limit-card"><div class="limit-level medium">Criticité moyenne</div><div class="limit-title">Lean 4 — audit externe</div><div class="limit-desc"><code style="font-family:var(--mono);font-size:0.85em">lake build</code> passe avec 0 sorry. Mais aucun expert Lean externe n'a vérifié que les énoncés formalisent correctement les propriétés informelles.</div></div>
+    <div class="limit-card"><div class="limit-level medium">Criticité moyenne</div><div class="limit-title">TLA+ — bornes restreintes</div><div class="limit-desc">TLC vérifié avec FMax=1, TauMax=3–5. Ne couvre pas FMax≥2 ni les plages temporelles arbitrairement grandes.</div></div>
+    <div class="limit-card"><div class="limit-level low">Criticité faible</div><div class="limit-title">Performance non mesurée</div><div class="limit-desc">Latence par décision, débit maximal et comportement sous charge ne sont pas benchmarkés. Les 51 agents tournent séquentiellement.</div></div>
+    <div class="limit-card"><div class="limit-level low">Criticité faible</div><div class="limit-title">Couverture de code</div><div class="limit-desc">Aucun rapport coverage.py généré. Les 12 tests pytest couvrent les cas principaux mais la couverture exacte des branches n'est pas mesurée.</div></div>
+    <div class="limit-card"><div class="limit-level low">Criticité faible</div><div class="limit-title">Non-anticipation déclarative</div><div class="limit-desc">Le flag <code style="font-family:var(--mono);font-size:0.85em">non_anticipation = True</code> est déclaratif. Il n'est pas vérifié formellement à l'exécution comme contrainte structurelle.</div></div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section id="perspectives">
+  <div class="section-label">07 — Perspectives d'usage</div>
+  <h2 class="section-title">Applications possibles</h2>
+  <p class="section-desc">Les exemples de ce repo sont des bancs d'essai techniques, pas des produits métier. Les domaines ci-dessous sont des pistes d'application — pas des implémentations existantes.</p>
+  <div class="persp-grid">
+    <div class="persp-card"><div class="persp-icon">🏦</div><div class="persp-name">Finance et régulation</div><div class="persp-desc">Couche de gouvernance pour la validation de transactions, le contrôle de conformité ou l'audit automatique des décisions. Décisions traçables et vérifiables plutôt que processus opaques.</div><div class="persp-actors">Banques · Banques centrales · Régulateurs</div></div>
+    <div class="persp-card"><div class="persp-icon">📈</div><div class="persp-name">Trading algorithmique</div><div class="persp-desc">Garde de sécurité logique autour de stratégies automatisées : empêcher certaines décisions lors de contradictions, limiter selon des contraintes formelles, produire un historique auditable.</div><div class="persp-actors">Hedge funds · Plateformes algo · DeFi · Crypto</div></div>
+    <div class="persp-card"><div class="persp-icon">💳</div><div class="persp-name">Paiement et e-commerce</div><div class="persp-desc">Sentinelle logique dans les flux transactionnels : détecter et bloquer certaines transactions suspectes avant exécution, tout en laissant passer les transactions normales.</div><div class="persp-actors">Réseaux de paiement · Marketplaces · Processeurs</div></div>
+    <div class="persp-card"><div class="persp-icon">🔍</div><div class="persp-name">Audit et cybersécurité</div><div class="persp-desc">Journal technique vérifiable : prouver qu'une règle a été appliquée, qu'une décision a été refusée, que le code n'a pas été modifié. Facilite les audits et investigations.</div><div class="persp-actors">Cabinets d'audit · Enquêteurs financiers · Assurances cyber</div></div>
+    <div class="persp-card"><div class="persp-icon">⚡</div><div class="persp-name">Systèmes critiques</div><div class="persp-desc">Couche de sécurité supplémentaire pour éviter des décisions dangereuses dans des systèmes automatisés. Refus de certaines actions selon des règles strictes et vérifiables.</div><div class="persp-actors">Infrastructures · Réseaux énergétiques · Systèmes autonomes</div></div>
+    <div class="persp-card"><div class="persp-icon">🎓</div><div class="persp-name">Recherche et enseignement</div><div class="persp-desc">Exemple concret de moteur décisionnel avec preuves formelles multi-couches (Lean 4 + TLA+ + tests adversariaux). Reproductible et auditable par des tiers.</div><div class="persp-actors">Universités · Laboratoires · Conférences</div></div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section id="structure">
+  <div class="section-label">08 — Structure du dépôt</div>
+  <h2 class="section-title">886 fichiers organisés</h2>
+  <div class="file-tree">
+<span class="dir">engine/</span>          <span class="comment">← Noyau Python OS0/OS1/OS2/OS3 + kernel + runtime + bus</span>
+<span class="dir">agents/</span>          <span class="comment">← 51 agents domaine (Trading, Bank, Ecom, Meta) + Guard X-108</span>
+<span class="dir">governance/</span>      <span class="comment">← Contrats TypeScript, agrégation, gates</span>
+<span class="dir">automation/</span>      <span class="comment">← Pipeline CLI + bridge TypeScript</span>
+<span class="dir">tests/</span>           <span class="comment">← Tests Python (12) + TypeScript (39) + adversariaux Phase 15.2</span>
+<span class="dir">proofs/</span>
+  <span class="dir">lean/</span>          <span class="comment">← Preuves formelles Lean 4 (6 théorèmes, 0 sorry)</span>
+  <span class="dir">tla/</span>           <span class="comment">← Spécifications TLA+ (X108 + DistributedX108)</span>
+  <span class="dir">V18_3_1/</span>       <span class="comment">← Proofkit scellé v18.3.1</span>
+  <span class="dir">V18_7/</span>         <span class="comment">← Proofkit v18.7 (non-circumvention, 200k fuzz)</span>
+  <span class="dir">V18_8/</span>         <span class="comment">← Proofkit v18.8 (convergence, stabilité)</span>
+  <span class="dir">anchors/</span>       <span class="comment">← Ancres RFC 3161 × 2</span>
+  verify_all.py · verify_merkle.py · verify_decision.py
+<span class="dir">distributed/</span>     <span class="comment">← Consensus distribué (in-process + Docker)</span>
+<span class="dir">examples/</span>        <span class="comment">← 4 cas JSON reproductibles</span>
+<span class="dir">scripts/</span>         <span class="comment">← generate_hashes.py + verify_hashes.py</span>
+README.md · bootstrap.sh · requirements.txt · LIMITS.md · AUDIT_GUIDE.md · LICENSE · NOTICE.md
+EXECUTION_LOG_v1.3.0.txt <span class="comment">← Log brut complet de toutes les exécutions</span>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section id="licence">
+  <div class="section-label">09 — Licence et protection</div>
+  <h2 class="section-title">CC BY-NC-ND 4.0</h2>
+  <p class="section-desc">Ce projet est publié sous licence Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International. La disponibilité publique ne constitue pas une licence commerciale.</p>
+  <table class="license-table">
+    <tr><td>Lecture, étude, audit, citation académique</td><td><span class="badge badge-pass">✓ Autorisé</span></td></tr>
+    <tr><td>Partage du lien et référencement public</td><td><span class="badge badge-pass">✓ Autorisé</span></td></tr>
+    <tr><td>Usage commercial, direct ou indirect</td><td><span class="badge badge-block">✗ Interdit sans accord</span></td></tr>
+    <tr><td>Modification, fork ou travaux dérivés</td><td><span class="badge badge-block">✗ Interdit sans accord</span></td></tr>
+    <tr><td>Réutilisation du code dans d'autres projets</td><td><span class="badge badge-block">✗ Interdit sans accord</span></td></tr>
+    <tr><td>Demande de licence commerciale ou partenariat</td><td><span class="badge badge-warn">→ Issue GitHub</span></td></tr>
+  </table>
+  <div class="code-block">
+<span class="comment"># Citation requise</span>
+Eaubin. Obsidia Engine — Proof Core (v1.3.0).
+GitHub, 2026. https://github.com/Eaubin08/obsidia-engine-proof-core
+
+<span class="comment"># Propriétaire intellectuel</span>
+© 2024–2026 Eaubin — Projet Obsidia — Tous droits réservés
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Obsidia Engine</div>
+  <div class="footer-desc">Moteur décisionnel déterministe · Proof Core v1.3.0 · 2026-03-11</div>
+  <div class="footer-links">
+    <a href="https://github.com/Eaubin08/obsidia-engine-proof-core" target="_blank">GitHub</a>
+    <a href="https://github.com/Eaubin08/obsidia-engine-proof-core/blob/main/README.md" target="_blank">README</a>
+    <a href="https://github.com/Eaubin08/obsidia-engine-proof-core/blob/main/LIMITS.md" target="_blank">Limites</a>
+    <a href="https://github.com/Eaubin08/obsidia-engine-proof-core/blob/main/AUDIT_GUIDE.md" target="_blank">Guide d'audit</a>
+    <a href="https://github.com/Eaubin08/obsidia-engine-proof-core/blob/main/LICENSE" target="_blank">Licence</a>
+    <a href="https://github.com/Eaubin08/obsidia-engine-proof-core/issues" target="_blank">Contact</a>
+  </div>
+  <div class="footer-copy">© 2024–2026 Eaubin — Projet Obsidia — CC BY-NC-ND 4.0</div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('scrollLine').style.width = scrolled + '%';
+  });
+</script>
+</body>
+</html>
