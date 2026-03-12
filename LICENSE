@@ -1,1 +1,80 @@
-Add appropriate license here.
+Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+
+Copyright (c) 2024–2026 Eaubin — Projet Obsidia
+All rights reserved.
+
+=======================================================================
+PROPRIETARY NOTICE
+=======================================================================
+
+This repository and all its contents — including but not limited to
+source code, formal specifications, proofs, cryptographic artifacts,
+documentation, and test suites — are the exclusive intellectual property
+of Eaubin (Projet Obsidia), 2024–2026.
+
+The public availability of this repository does NOT constitute a grant
+of any commercial license, patent license, or right to create derivative
+works. Public access is provided solely for the purposes of:
+
+  - Academic study and research
+  - Independent audit and verification
+  - Citation in academic or technical publications
+  - Public demonstration of the engine's properties
+
+Any other use requires a separate written agreement with the author.
+
+=======================================================================
+LICENSE TERMS (CC BY-NC-ND 4.0)
+=======================================================================
+
+This work is licensed under the Creative Commons
+Attribution-NonCommercial-NoDerivatives 4.0 International License.
+
+You are free to:
+  Share — copy and redistribute the material in any medium or format
+
+Under the following terms:
+  Attribution — You must give appropriate credit, provide a link to
+    the license, and indicate if changes were made. You may do so in
+    any reasonable manner, but not in any way that suggests the licensor
+    endorses you or your use.
+
+  NonCommercial — You may not use the material for commercial purposes.
+
+  NoDerivatives — If you remix, transform, or build upon the material,
+    you may not distribute the modified material.
+
+  No additional restrictions — You may not apply legal terms or
+    technological measures that legally restrict others from doing
+    anything the license permits.
+
+=======================================================================
+FULL LICENSE TEXT
+=======================================================================
+
+THE FULL LEGAL TEXT OF CC BY-NC-ND 4.0 IS AVAILABLE AT:
+https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
+
+=======================================================================
+COMMERCIAL LICENSING
+=======================================================================
+
+For commercial use, integration, partnership, or derivative work
+requests, contact the author via GitHub:
+https://github.com/Eaubin08/obsidia-engine-proof-core/issues
+
+=======================================================================
+DISCLAIMER
+=======================================================================
+
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+The examples and simulations in this repository (Trading, Bank,
+E-commerce) are technical demonstrations only and do not constitute
+financial, legal, or operational advice of any kind.
