@@ -1,6 +1,11 @@
 """
-Obsidia Sigma Monitor v1.3.0 — V18.9 Dynamic Stability Check
+Obsidia Sigma Monitor v1.4.1 — V18.9 Dynamic Stability Check
 ProofKit-compatible version with export_to_proofkit() and save_report().
+
+Architecture "Moteur Fixe + Config Calibrée" (v1.4.1) :
+  - Les seuils sont lus depuis agents/sigma_config.json si présent.
+  - Les valeurs par défaut v1.4.0 s'appliquent si le fichier est absent.
+  - Le moteur lui-même ne change jamais de structure (scellé).
 
 Surveille la trajectoire de décision du moteur en temps réel :
   - Vanishing Acceleration : z̈ ≈ 0 (pas de flip brutal)
@@ -14,6 +19,7 @@ Usage :
 """
 
 import json
+import os
 import time
 import hashlib
 from pathlib import Path
@@ -22,26 +28,76 @@ from typing import List, Dict, Any, Optional
 
 SEVERITY_MAP = {"S0": 0.0, "S1": 0.25, "S2": 0.5, "S3": 0.75, "S4": 1.0}
 
+# Valeurs par défaut v1.4.0 (utilisées si sigma_config.json absent)
+_DEFAULT_TAU_MIN = 0.05
+_DEFAULT_TAU_MAX = 0.75
+_DEFAULT_ACCEL_LIMIT = 0.40
+
+
+def _load_sigma_config(config_path: str = "agents/sigma_config.json") -> Dict[str, Any]:
+    """
+    Charge la configuration Sigma depuis un fichier JSON externe.
+    Retourne un dict vide si le fichier est absent ou invalide.
+    """
+    p = Path(config_path)
+    if p.exists():
+        try:
+            with open(p, "r") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, IOError):
+            pass
+    return {}
+
 
 class ObsidiaSigmaMonitor:
     """
     Moniteur de stabilité dynamique Sigma — V18.9.
     Compatible ProofKit : export_to_proofkit() et save_report().
+
+    Les seuils sont chargés depuis agents/sigma_config.json (si présent),
+    ce qui permet une calibration statistique sans modifier le code moteur.
     """
 
     def __init__(
         self,
-        tau_min: float = 0.05,
-        tau_max: float = 0.75,
-        accel_limit: float = 0.4,
+        tau_min: Optional[float] = None,
+        tau_max: Optional[float] = None,
+        accel_limit: Optional[float] = None,
         coherence_hash: Optional[str] = None,
+        config_path: str = "agents/sigma_config.json",
     ):
-        self.tau_min = tau_min
-        self.tau_max = tau_max
-        self.accel_limit = accel_limit
-        self.coherence_hash = coherence_hash  # hash système attendu (optionnel)
+        # Chargement de la config externe
+        cfg = _load_sigma_config(config_path)
+
+        # Priorité : paramètre explicite > config JSON > défaut v1.4.0
+        self.tau_min = tau_min if tau_min is not None else cfg.get("tau_min", _DEFAULT_TAU_MIN)
+        self.tau_max = tau_max if tau_max is not None else cfg.get("tau_max", _DEFAULT_TAU_MAX)
+        self.accel_limit = accel_limit if accel_limit is not None else cfg.get("accel_limit", _DEFAULT_ACCEL_LIMIT)
+        self.coherence_hash = coherence_hash
+        self.config_source = config_path if Path(config_path).exists() else "defaults_v1.4.0"
+
         self.history: List[Dict[str, Any]] = []
         self.steps: List[Dict[str, Any]] = []  # trace complète de chaque step
+
+    # ------------------------------------------------------------------
+    # Auto-calibration (ajustement dynamique des seuils sur l'historique)
+    # ------------------------------------------------------------------
+
+    def auto_calibrate(self) -> None:
+        """
+        Ajuste tau_max basé sur l'historique récent (méthode 1.5x moyenne).
+        Ne modifie que l'instance en mémoire, pas le fichier de config.
+        Nécessite au moins 10 pas d'historique.
+        """
+        if len(self.history) < 10:
+            return
+        velocities = [
+            abs(self.history[i]["val"] - self.history[i - 1]["val"])
+            for i in range(1, len(self.history))
+        ]
+        avg = sum(velocities) / len(velocities)
+        self.tau_max = round(avg * 1.5, 2)
+        print(f"[SIGMA] Auto-calibrated tau_max to: {self.tau_max}")
 
     # ------------------------------------------------------------------
     # Vecteur latent z_t
@@ -72,6 +128,7 @@ class ObsidiaSigmaMonitor:
         step_report: Dict[str, Any] = {
             "step": len(self.steps),
             "severity": severity,
+            "z": z_t,
             "z_t": z_t,
             "velocity": 0.0,
             "acceleration": 0.0,
@@ -148,13 +205,20 @@ class ObsidiaSigmaMonitor:
         )
         unstable_steps = [s for s in self.steps if s["stability_status"] == "UNSTABLE"]
         passed = len(unstable_steps) == 0
-
         status = "PASS" if passed else "FAIL"
+
+        # Calcul de la vitesse moyenne
+        velocities = [s["velocity"] for s in self.steps if s["velocity"] > 0]
+        mean_velocity = round(sum(velocities) / len(velocities), 6) if velocities else 0.0
+
         summary_lines = [
             f"V18.9 Sigma Dynamic Stability — {status}",
             f"Steps evaluated : {len(self.steps)}",
             f"Unstable steps  : {len(unstable_steps)}",
             f"Total violations: {total_violations}",
+            f"Config source   : {self.config_source}",
+            f"tau_max         : {self.tau_max}",
+            f"accel_limit     : {self.accel_limit}",
         ]
         if all_violation_types:
             summary_lines.append(f"Violation types : {', '.join(all_violation_types)}")
@@ -169,6 +233,23 @@ class ObsidiaSigmaMonitor:
                 "unstable_steps": len(unstable_steps),
                 "violations_total": total_violations,
                 "violation_types": all_violation_types,
+                "metrics": {
+                    "mean_velocity": mean_velocity,
+                    "total_steps": len(self.steps),
+                    "tau_max_used": self.tau_max,
+                    "accel_limit_used": self.accel_limit,
+                },
+                "constraints": {
+                    "vanishing_acceleration": "VOLATILE" if any(
+                        "HIGH_CURVATURE_INSTABILITY" in s["violations"] for s in self.steps
+                    ) else "OK",
+                    "velocity_band": "DRIFT" if any(
+                        "LATENT_DRIFT" in s["violations"] for s in self.steps
+                    ) else "OK",
+                    "coherence_stationarity": "VIOLATED" if any(
+                        "COHERENCE_STATIONARITY_VIOLATED" in s["violations"] for s in self.steps
+                    ) else "OK",
+                },
                 "steps_detail": self.steps,
                 "stdout": "\n".join(summary_lines) + "\n",
             }
