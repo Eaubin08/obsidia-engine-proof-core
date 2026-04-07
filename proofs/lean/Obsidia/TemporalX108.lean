@@ -35,10 +35,11 @@ theorem X108_no_act_before_tau (τ : Tau) (i : TInput)
   rfl
 
 theorem int_lt_of_neg_and_nonneg (a b : Int) (hneg : a < 0) (hnonneg : 0 ≤ b) : a < b := by
-  exact Int.lt_of_lt_of_le hneg hnonneg
+  omega
 
-theorem int_not_lt_of_le (a b : Int) (h : a ≤ b) : ¬ (b < a) := by
-  exact Int.not_lt_of_ge h
+theorem int_not_lt_of_le (a b : Int) (h : a ≤ b) : Not (b < a) := by
+  intro hlt
+  omega
 
 theorem X108_skew_safe (τ : Tau) (i : TInput)
     (hIrr : i.irr = true)
