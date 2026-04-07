@@ -1,0 +1,27 @@
+{"plugins": [],
+ "package": "obsidia-engine-proof-core",
+ "options": {},
+ "name": "Obsidia",
+ "isModule": false,
+ "importArts":
+ {"Obsidia.TemporalX108":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\TemporalX108.olean"],
+  "Obsidia.SystemModel":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\SystemModel.olean"],
+  "Obsidia.Sensitivity":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Sensitivity.olean"],
+  "Obsidia.Seal":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Seal.olean"],
+  "Obsidia.Refinement":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Refinement.olean"],
+  "Obsidia.Merkle":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Merkle.olean"],
+  "Obsidia.Main":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Main.olean"],
+  "Obsidia.CryptoAssumptions":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\CryptoAssumptions.olean"],
+  "Obsidia.Consensus":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Consensus.olean"],
+  "Obsidia.Basic":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Basic.olean"]},
+ "dynlibs": []}

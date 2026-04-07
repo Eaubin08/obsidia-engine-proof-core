@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "obsidia-engine-proof-core",
+ "options": {},
+ "name": "Obsidia.TemporalX108",
+ "isModule": false,
+ "importArts":
+ {"Obsidia.Basic":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Basic.olean"]},
+ "dynlibs": []}

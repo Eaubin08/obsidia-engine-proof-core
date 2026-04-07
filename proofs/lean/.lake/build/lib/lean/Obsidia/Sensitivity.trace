@@ -1,0 +1,39 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["2f39af6628885037.olean"],
+  "i": "c69578005a523df1.ilean",
+  "c": "e401399c632df16e.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean c:\\Users\\User\\.elan\\toolchains\\leanprover--lean4---v4.28.0\\bin\\lean.exe C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\Obsidia\\Sensitivity.lean -o C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Sensitivity.olean -i C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Sensitivity.ilean -c C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\Sensitivity.c --setup C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\Sensitivity.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "Obsidia/Sensitivity.lean:60:0: 'Obsidia.Sensitivity.merkleRoot_change_if_leaf_change' does not depend on any axioms",
+   "level": "info"},
+  {"message":
+   "Obsidia/Sensitivity.lean:61:0: 'Obsidia.Sensitivity.P15_Immutability_Strong' does not depend on any axioms",
+   "level": "info"}],
+ "inputs":
+ [["Obsidia.Sensitivity:deps",
+   [["deps",
+     [["«obsidia-engine-proof-core»/Obsidia:extraDep",
+       [["@«obsidia-engine-proof-core»:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["Obsidia.Merkle transitive imports (legacy)", "452004203f9b7a5d"],
+        ["Obsidia.Merkle:importAllArts", "87742384cf515800"],
+        ["Obsidia.CryptoAssumptions transitive imports (legacy)",
+         "00000000000006bb"],
+        ["Obsidia.CryptoAssumptions:importAllArts", "e87daa814b98c79b"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
+   "a96bc04a2e5e9630"],
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\Obsidia\\Sensitivity.lean",
+   "80b0a6accce7caa8"],
+  ["options", "00000000000006bb"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "79c2229c5977e510"}

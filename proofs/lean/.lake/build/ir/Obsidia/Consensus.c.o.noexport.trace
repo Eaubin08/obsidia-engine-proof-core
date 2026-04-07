@@ -1,0 +1,18 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs": "b5851964ebbf11cd.o",
+ "log":
+ [{"message":
+   ".> c:\\Users\\User\\.elan\\toolchains\\leanprover--lean4---v4.28.0\\bin\\clang.exe -c -o C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\Consensus.c.o.noexport C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\Consensus.c -I c:\\Users\\User\\.elan\\toolchains\\leanprover--lean4---v4.28.0\\include -fstack-clash-protection -fwrapv -fdata-sections -ffunction-sections -Wno-unused-command-line-argument --sysroot c:\\Users\\User\\.elan\\toolchains\\leanprover--lean4---v4.28.0 -nostdinc -isystem c:\\Users\\User\\.elan\\toolchains\\leanprover--lean4---v4.28.0/include/clang -O3 -DNDEBUG",
+   "level": "trace"}],
+ "inputs":
+ [["Obsidia.Consensus:c",
+   [["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\Consensus.c",
+     "a94041f6d0312aa4"],
+    ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
+     "a96bc04a2e5e9630"]]],
+  ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
+   "a96bc04a2e5e9630"],
+  ["traceArgs: #[-O3, -DNDEBUG]", "6c7bb0eeabd8f74a"],
+  ["x86_64-w64-windows-gnu", "360db333d006d911"]],
+ "depHash": "0aa80074b09c2ff9"}

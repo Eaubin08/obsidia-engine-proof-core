@@ -1,4 +1,5 @@
 -- OBSIDIA — Module root (imports all sub-modules)
+import Obsidia.CryptoAssumptions
 import Obsidia.Basic
 import Obsidia.Consensus
 import Obsidia.Merkle

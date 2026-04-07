@@ -1,0 +1,47 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["ec71c1ddd92507c1.olean"],
+  "i": "f5ce703184686b34.ilean",
+  "c": "fd10978b6727164d.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean c:\\Users\\User\\.elan\\toolchains\\leanprover--lean4---v4.28.0\\bin\\lean.exe C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\Obsidia\\SystemModel.lean -o C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\SystemModel.olean -i C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\SystemModel.ilean -c C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\SystemModel.c --setup C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\SystemModel.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "Obsidia/SystemModel.lean:78:0: 'Obsidia.SystemModel.P17_AuditGrowth' does not depend on any axioms",
+   "level": "info"},
+  {"message":
+   "Obsidia/SystemModel.lean:79:0: 'List.length_append' depends on axioms: [propext]",
+   "level": "info"},
+  {"message":
+   "Obsidia/SystemModel.lean:80:0: 'List.length_singleton' does not depend on any axioms",
+   "level": "info"},
+  {"message":
+   "Obsidia/SystemModel.lean:81:0: 'Obsidia.SystemModel.P17_AuditLastIsComputed' does not depend on any axioms",
+   "level": "info"},
+  {"message":
+   "Obsidia/SystemModel.lean:82:0: 'Obsidia.SystemModel.P17_AuditGrowth' does not depend on any axioms",
+   "level": "info"}],
+ "inputs":
+ [["Obsidia.SystemModel:deps",
+   [["deps",
+     [["«obsidia-engine-proof-core»/Obsidia:extraDep",
+       [["@«obsidia-engine-proof-core»:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["Obsidia.Basic transitive imports (legacy)", "00000000000006bb"],
+        ["Obsidia.Basic:importAllArts", "96737e867cf9e093"],
+        ["Obsidia.Sensitivity transitive imports (legacy)", "4aa1654df1379be9"],
+        ["Obsidia.Sensitivity:importAllArts", "e0f57ddac8bda524"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
+   "a96bc04a2e5e9630"],
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\Obsidia\\SystemModel.lean",
+   "9958b1c610240e33"],
+  ["options", "00000000000006bb"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "e85af9ece34c8924"}

@@ -1,7 +1,10 @@
 import Lake
 open Lake DSL
 
-package «obsidia» where
+package «obsidia-engine-proof-core» where
 
 lean_lib Obsidia where
-  roots := #[`Obsidia]
+
+@[default_target]
+lean_exe obsidia where
+  root := `Obsidia.Main

@@ -1,0 +1,46 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["53e2d17bc1948af5.olean"],
+  "i": "3b3af8ff37dedfad.ilean",
+  "c": "25c9b3c2fb55d718.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean c:\\Users\\User\\.elan\\toolchains\\leanprover--lean4---v4.28.0\\bin\\lean.exe C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\Obsidia\\CryptoAssumptions.lean -o C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\CryptoAssumptions.olean -i C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\CryptoAssumptions.ilean -c C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\CryptoAssumptions.c --setup C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\CryptoAssumptions.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "Obsidia/CryptoAssumptions.lean:129:0: 'Obsidia.append_nil_local' does not depend on any axioms",
+   "level": "info"},
+  {"message":
+   "Obsidia/CryptoAssumptions.lean:130:0: 'Obsidia.append_assoc_local' does not depend on any axioms",
+   "level": "info"},
+  {"message":
+   "Obsidia/CryptoAssumptions.lean:131:0: 'Obsidia.decodeFold_H_of_decodable' does not depend on any axioms",
+   "level": "info"},
+  {"message":
+   "Obsidia/CryptoAssumptions.lean:132:0: 'Obsidia.decodeFold_foldl_of_decodable' does not depend on any axioms",
+   "level": "info"},
+  {"message":
+   "Obsidia/CryptoAssumptions.lean:133:0: 'Obsidia.decodeFold_foldl_neutral' does not depend on any axioms",
+   "level": "info"},
+  {"message":
+   "Obsidia/CryptoAssumptions.lean:134:0: 'Obsidia.foldl_H_injective' does not depend on any axioms",
+   "level": "info"}],
+ "inputs":
+ [["Obsidia.CryptoAssumptions:deps",
+   [["deps",
+     [["«obsidia-engine-proof-core»/Obsidia:extraDep",
+       [["@«obsidia-engine-proof-core»:extraDep", "00000000000006bb"]]],
+      ["imports", "00000000000006bb"]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
+   "a96bc04a2e5e9630"],
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\Obsidia\\CryptoAssumptions.lean",
+   "62cb58746c9d124f"],
+  ["options", "00000000000006bb"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "271a97f3d039520f"}

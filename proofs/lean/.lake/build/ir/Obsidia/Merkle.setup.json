@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "obsidia-engine-proof-core",
+ "options": {},
+ "name": "Obsidia.Merkle",
+ "isModule": false,
+ "importArts":
+ {"Obsidia.CryptoAssumptions":
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\CryptoAssumptions.olean"]},
+ "dynlibs": []}

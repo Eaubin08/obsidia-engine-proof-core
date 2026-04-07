@@ -1,75 +1,93 @@
-/-
-  OBSIDIA — Phase 11.5
-  Consensus 3/4 (4 nodes) over Decision3, without Mathlib.
-
-  Rule:
-    - If ≥3 nodes agree on ACT  -> ACT
-    - Else if ≥3 nodes agree on HOLD -> HOLD
-    - Else if ≥3 nodes agree on BLOCK -> BLOCK
-    - Else -> BLOCK (fail-closed)
-
-  All theorems proved by exhaustive case analysis (3^4 = 81 cases).
--/
-
 import Obsidia.Basic
 
 namespace Obsidia
 
-/-- Count occurrences of a value in a list (no Mathlib). -/
 def countDec (d : Decision3) (xs : List Decision3) : Nat :=
   xs.foldl (fun acc x => if x = d then acc + 1 else acc) 0
 
-/-- Consensus aggregator for exactly 4 nodes (supermajority 3/4). -/
 def aggregate4 (d1 d2 d3 d4 : Decision3) : Decision3 :=
-  let xs : List Decision3 := [d1, d2, d3, d4]
-  if 3 ≤ countDec Decision3.ACT xs then
+  if decide (3 <= countDec Decision3.ACT [d1, d2, d3, d4]) then
     Decision3.ACT
-  else if 3 ≤ countDec Decision3.HOLD xs then
+  else if decide (3 <= countDec Decision3.HOLD [d1, d2, d3, d4]) then
     Decision3.HOLD
-  else if 3 ≤ countDec Decision3.BLOCK xs then
+  else if decide (3 <= countDec Decision3.BLOCK [d1, d2, d3, d4]) then
     Decision3.BLOCK
   else
     Decision3.BLOCK
 
-/-- If the ACT supermajority condition holds, aggregate4 = ACT. -/
 theorem aggregate4_act
   (d1 d2 d3 d4 : Decision3)
-  (h : 3 ≤ countDec Decision3.ACT [d1,d2,d3,d4]) :
+  (h : 3 <= countDec Decision3.ACT [d1, d2, d3, d4]) :
   aggregate4 d1 d2 d3 d4 = Decision3.ACT := by
   unfold aggregate4
-  simp only [countDec, List.foldl] at *
-  cases d1 <;> cases d2 <;> cases d3 <;> cases d4 <;> simp_all (config := { decide := true })
+  have htrue : decide (3 <= countDec Decision3.ACT [d1, d2, d3, d4]) = true := decide_eq_true h
+  rw [htrue]
+  rfl
 
-/-- If ACT does not supermajority, but HOLD does, aggregate4 = HOLD. -/
-theorem aggregate4_hold
-  (d1 d2 d3 d4 : Decision3)
-  (hAct : ¬ (3 ≤ countDec Decision3.ACT [d1,d2,d3,d4]))
-  (hHold : 3 ≤ countDec Decision3.HOLD [d1,d2,d3,d4]) :
-  aggregate4 d1 d2 d3 d4 = Decision3.HOLD := by
-  unfold aggregate4
-  simp only [countDec, List.foldl] at *
-  cases d1 <;> cases d2 <;> cases d3 <;> cases d4 <;> simp_all (config := { decide := true })
-
-/-- If neither ACT nor HOLD supermajority, but BLOCK does, aggregate4 = BLOCK. -/
-theorem aggregate4_block_by_supermajority
-  (d1 d2 d3 d4 : Decision3)
-  (hAct : ¬ (3 ≤ countDec Decision3.ACT [d1,d2,d3,d4]))
-  (hHold : ¬ (3 ≤ countDec Decision3.HOLD [d1,d2,d3,d4]))
-  (hBlock : 3 ≤ countDec Decision3.BLOCK [d1,d2,d3,d4]) :
-  aggregate4 d1 d2 d3 d4 = Decision3.BLOCK := by
-  unfold aggregate4
-  simp only [countDec, List.foldl] at *
-  cases d1 <;> cases d2 <;> cases d3 <;> cases d4 <;> simp_all (config := { decide := true })
-
-/-- Fail-closed: if no decision reaches 3/4, output is BLOCK. -/
 theorem aggregate4_fail_closed
   (d1 d2 d3 d4 : Decision3)
-  (hAct : ¬ (3 ≤ countDec Decision3.ACT [d1,d2,d3,d4]))
-  (hHold : ¬ (3 ≤ countDec Decision3.HOLD [d1,d2,d3,d4]))
-  (hBlock : ¬ (3 ≤ countDec Decision3.BLOCK [d1,d2,d3,d4])) :
+  (hACT : ¬ (3 <= countDec Decision3.ACT [d1, d2, d3, d4]))
+  (hHOLD : ¬ (3 <= countDec Decision3.HOLD [d1, d2, d3, d4]))
+  (hBLOCK : ¬ (3 <= countDec Decision3.BLOCK [d1, d2, d3, d4])) :
   aggregate4 d1 d2 d3 d4 = Decision3.BLOCK := by
   unfold aggregate4
-  simp only [countDec, List.foldl] at *
-  cases d1 <;> cases d2 <;> cases d3 <;> cases d4 <;> simp_all (config := { decide := true })
+  have h1 : decide (3 <= countDec Decision3.ACT [d1, d2, d3, d4]) = false := decide_eq_false hACT
+  have h2 : decide (3 <= countDec Decision3.HOLD [d1, d2, d3, d4]) = false := decide_eq_false hHOLD
+  have h3 : decide (3 <= countDec Decision3.BLOCK [d1, d2, d3, d4]) = false := decide_eq_false hBLOCK
+  rw [h1, h2, h3]
+  rfl
+
+theorem aggregate4_unanimous
+  (d : Decision3) :
+  aggregate4 d d d d = d := by
+  cases d <;> simp [aggregate4, countDec]
+
+theorem no_act_and_hold_supermajority_4
+  (d1 d2 d3 d4 : Decision3)
+  (hAct : 3 <= countDec Decision3.ACT [d1, d2, d3, d4])
+  (hHold : 3 <= countDec Decision3.HOLD [d1, d2, d3, d4]) :
+  False := by
+  cases d1 <;> cases d2 <;> cases d3 <;> cases d4
+  all_goals
+    simp only [countDec, List.foldl] at hAct hHold
+    simp at hAct hHold
+
+theorem no_act_and_block_supermajority_4
+  (d1 d2 d3 d4 : Decision3)
+  (hAct : 3 <= countDec Decision3.ACT [d1, d2, d3, d4])
+  (hBlock : 3 <= countDec Decision3.BLOCK [d1, d2, d3, d4]) :
+  False := by
+  cases d1 <;> cases d2 <;> cases d3 <;> cases d4 <;>
+    first | simp [countDec] at hAct hBlock ⊢
+
+theorem no_hold_and_block_supermajority_4
+  (d1 d2 d3 d4 : Decision3)
+  (hHold : 3 <= countDec Decision3.HOLD [d1, d2, d3, d4])
+  (hBlock : 3 <= countDec Decision3.BLOCK [d1, d2, d3, d4]) :
+  False := by
+  cases d1 <;> cases d2 <;> cases d3 <;> cases d4 <;>
+    first | simp [countDec] at hHold hBlock ⊢
+
+theorem no_two_distinct_supermajorities_4
+  (a b : Decision3) (d1 d2 d3 d4 : Decision3)
+  (hab : Not (a = b))
+  (ha : 3 <= countDec a [d1, d2, d3, d4])
+  (hb : 3 <= countDec b [d1, d2, d3, d4]) :
+  False := by
+  cases a <;> cases b
+  · exact (hab rfl).elim
+  · exact no_hold_and_block_supermajority_4 d1 d2 d3 d4 hb ha
+  · exact no_act_and_block_supermajority_4 d1 d2 d3 d4 hb ha
+  · exact no_hold_and_block_supermajority_4 d1 d2 d3 d4 ha hb
+  · exact (hab rfl).elim
+  · exact no_act_and_hold_supermajority_4 d1 d2 d3 d4 hb ha
+  · exact no_act_and_block_supermajority_4 d1 d2 d3 d4 ha hb
+  · exact no_act_and_hold_supermajority_4 d1 d2 d3 d4 ha hb
+  · exact (hab rfl).elim
 
 end Obsidia
+
+#print axioms Obsidia.no_act_and_hold_supermajority_4
+#print axioms Obsidia.no_act_and_block_supermajority_4
+#print axioms Obsidia.no_hold_and_block_supermajority_4
+#print axioms Obsidia.no_two_distinct_supermajorities_4

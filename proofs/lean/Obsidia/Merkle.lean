@@ -1,25 +1,9 @@
+import Obsidia.CryptoAssumptions
 
 namespace Obsidia
 
--- Abstract Hash type
-axiom Hash : Type
-
--- Abstract hash function (binary combine)
-noncomputable axiom H : Hash → Hash → Hash
-
--- Collision resistance assumption (local injectivity)
-axiom H_injective_left :
-  ∀ {a b c : Hash}, H a b = H c b → a = c
-
-axiom H_injective_right :
-  ∀ {a b c : Hash}, H a b = H a c → b = c
-
--- Simple Merkle over 2 leaves (minimal formal core)
-
-noncomputable def merkle2 (a b : Hash) : Hash :=
+ def merkle2 (a b : Hash) : Hash :=
   H a b
-
--- Mutation theorem (2-leaf version)
 
 theorem merkle2_left_mutation
   (a a' b : Hash)

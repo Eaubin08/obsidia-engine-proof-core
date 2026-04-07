@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["3fae67c20420b301.olean"],
+  "i": "9522057d81cc16f5.ilean",
+  "c": "7d657b1c2105353f.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean c:\\Users\\User\\.elan\\toolchains\\leanprover--lean4---v4.28.0\\bin\\lean.exe C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\Obsidia\\Refinement.lean -o C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Refinement.olean -i C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\lib\\lean\\Obsidia\\Refinement.ilean -c C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\Refinement.c --setup C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\.lake\\build\\ir\\Obsidia\\Refinement.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["Obsidia.Refinement:deps",
+   [["deps",
+     [["«obsidia-engine-proof-core»/Obsidia:extraDep",
+       [["@«obsidia-engine-proof-core»:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["Obsidia.SystemModel transitive imports (legacy)", "8a85ced518f9e89d"],
+        ["Obsidia.SystemModel:importAllArts", "0669867aa9d410fe"],
+        ["Obsidia.TemporalX108 transitive imports (legacy)",
+         "33a82c6858826e9b"],
+        ["Obsidia.TemporalX108:importAllArts", "baa254a1eddfd5d2"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
+   "a96bc04a2e5e9630"],
+  ["C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\proofs\\lean\\Obsidia\\Refinement.lean",
+   "46b43cc40555c0cb"],
+  ["options", "00000000000006bb"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "cd634e0262578c0a"}

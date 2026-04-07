@@ -1,125 +1,128 @@
 import Std
 
-/-
-  OBSIDIA — Formal Core V18.9
-  Lean 4.28 — Phase 11.2 (core theorems)
-
-  Domain: Rat (no Mathlib)
--/
-
 namespace Obsidia
 
-/-- OS2 engine metrics (Rat domain) -/
 structure Metrics where
   T_mean  : Rat
   H_score : Rat
   A_score : Rat
   S       : Rat
 
-/-- Binary decision -/
 inductive Decision
   | HOLD
   | ACT
   deriving Repr, DecidableEq
 
-/-- Decision rule: ACT iff θ ≤ S -/
 def decision (m : Metrics) (theta : Rat) : Decision :=
-  if theta ≤ m.S then Decision.ACT else Decision.HOLD
+  match decide (theta <= m.S) with
+  | true  => Decision.ACT
+  | false => Decision.HOLD
 
-/-- Characterization: ACT iff θ ≤ S. -/
 theorem decision_eq_ACT_iff (m : Metrics) (theta : Rat) :
-    decision m theta = Decision.ACT ↔ theta ≤ m.S := by
+    decision m theta = Decision.ACT <-> theta <= m.S := by
   unfold decision
-  by_cases h : theta ≤ m.S
-  · simp [h]
-  · simp [h]
+  constructor
+  · intro h
+    by_cases hle : theta <= m.S
+    · exact hle
+    · have hfalse : decide (theta <= m.S) = false := decide_eq_false hle
+      rw [hfalse] at h
+      cases h
+  · intro hle
+    have htrue : decide (theta <= m.S) = true := decide_eq_true hle
+    rw [htrue]
 
-/-- Characterization: HOLD iff ¬(θ ≤ S). -/
 theorem decision_eq_HOLD_iff (m : Metrics) (theta : Rat) :
-    decision m theta = Decision.HOLD ↔ ¬ theta ≤ m.S := by
+    decision m theta = Decision.HOLD <-> Not (theta <= m.S) := by
   unfold decision
-  by_cases h : theta ≤ m.S
-  · simp [h]
-  · simp [h]
+  constructor
+  · intro h
+    intro hle
+    have htrue : decide (theta <= m.S) = true := decide_eq_true hle
+    rw [htrue] at h
+    cases h
+  · intro hnot
+    have hfalse : decide (theta <= m.S) = false := decide_eq_false hnot
+    rw [hfalse]
 
-/-- D1 — Determinism (pure function). -/
 theorem D1_determinism (m : Metrics) (theta : Rat) :
     decision m theta = decision m theta := rfl
 
-/-- G1 — ACT if θ ≤ S. -/
 theorem G1_act_above_threshold (m : Metrics) (theta : Rat)
-    (h : theta ≤ m.S) :
-    decision m theta = Decision.ACT := (decision_eq_ACT_iff m theta).2 h
+    (h : theta <= m.S) :
+    decision m theta = Decision.ACT := by
+  unfold decision
+  have htrue : decide (theta <= m.S) = true := decide_eq_true h
+  rw [htrue]
 
-/-- E2 — HOLD if ¬(θ ≤ S). -/
 theorem E2_no_act_below_threshold (m : Metrics) (theta : Rat)
-    (h : ¬ theta ≤ m.S) :
-    decision m theta = Decision.HOLD := (decision_eq_HOLD_iff m theta).2 h
+    (h : Not (theta <= m.S)) :
+    decision m theta = Decision.HOLD := by
+  unfold decision
+  have hfalse : decide (theta <= m.S) = false := decide_eq_false h
+  rw [hfalse]
 
-/-- G2 — Boundary inclusive: S = θ → ACT. -/
 theorem G2_boundary_inclusive (m : Metrics) (theta : Rat)
     (h : m.S = theta) :
     decision m theta = Decision.ACT := by
-  -- goal: θ ≤ S
-  have : theta ≤ m.S := by
-    -- rewrite using h
-    simpa [h] using (Rat.le_refl : theta ≤ theta)
-  exact G1_act_above_threshold m theta this
+  have hle : theta <= m.S := by
+    simpa [h] using (Rat.le_refl : theta <= theta)
+  exact G1_act_above_threshold m theta hle
 
-/-- G3 — Monotonicity: if θ ≤ S₁ and S₁ ≤ S₂ then decision₂ = ACT. -/
-theorem G3_monotonicity (m₁ m₂ : Metrics) (theta : Rat)
-    (h1 : theta ≤ m₁.S) (h2 : m₁.S ≤ m₂.S) :
-    decision m₂ theta = Decision.ACT := by
-  have : theta ≤ m₂.S := Rat.le_trans h1 h2
-  exact G1_act_above_threshold m₂ theta this
+theorem G3_monotonicity (m1 m2 : Metrics) (theta : Rat)
+    (h1 : theta <= m1.S) (h2 : m1.S <= m2.S) :
+    decision m2 theta = Decision.ACT := by
+  have hle : theta <= m2.S := Rat.le_trans h1 h2
+  exact G1_act_above_threshold m2 theta hle
 
-
-/-
-  Phase 11.3 — Institutional decision layer preparation
-
-  We introduce a tri-state decision for institutional stacks:
-  BLOCK > HOLD > ACT
-
-  In OS2 core, the computed decision is binary (HOLD/ACT).
-  We lift it into Decision3, and prove it never yields BLOCK.
--/
-
-/-- Tri-state institutional decision (for future consensus / PBFT / refusal). -/
 inductive Decision3
   | BLOCK
   | HOLD
   | ACT
   deriving Repr, DecidableEq
 
-/-- Lift binary Decision into Decision3 (no BLOCK at OS2 core). -/
 def liftDecision (d : Decision) : Decision3 :=
   match d with
   | Decision.HOLD => Decision3.HOLD
   | Decision.ACT  => Decision3.ACT
 
-/-- Institutional decision rule: lifted OS2 decision (no BLOCK here). -/
 def decision3 (m : Metrics) (theta : Rat) : Decision3 :=
   liftDecision (decision m theta)
 
-/-- L11.3 — Core never outputs BLOCK. -/
 theorem L11_3_no_block (m : Metrics) (theta : Rat) :
-    decision3 m theta ≠ Decision3.BLOCK := by
-  unfold decision3 liftDecision
-  -- decision m theta is either HOLD or ACT
-  cases h : decision m theta <;> simp [h]
+    Not (decision3 m theta = Decision3.BLOCK) := by
+  intro h
+  cases hd : decision m theta with
+  | HOLD =>
+      rw [show decision3 m theta = Decision3.HOLD by
+        unfold decision3
+        rw [hd]
+        rfl] at h
+      cases h
+  | ACT =>
+      rw [show decision3 m theta = Decision3.ACT by
+        unfold decision3
+        rw [hd]
+        rfl] at h
+      cases h
 
-/-- L11.3 — If θ ≤ S then decision3 = ACT. -/
-theorem L11_3_act (m : Metrics) (theta : Rat) (h : theta ≤ m.S) :
+theorem L11_3_act (m : Metrics) (theta : Rat) (h : theta <= m.S) :
     decision3 m theta = Decision3.ACT := by
   unfold decision3 liftDecision
-  have : decision m theta = Decision.ACT := G1_act_above_threshold m theta h
-  simp [this]
+  have hd : decision m theta = Decision.ACT := G1_act_above_threshold m theta h
+  simp [hd]
 
-/-- L11.3 — If ¬(θ ≤ S) then decision3 = HOLD. -/
-theorem L11_3_hold (m : Metrics) (theta : Rat) (h : ¬ theta ≤ m.S) :
+theorem L11_3_hold (m : Metrics) (theta : Rat) (h : Not (theta <= m.S)) :
     decision3 m theta = Decision3.HOLD := by
   unfold decision3 liftDecision
-  have : decision m theta = Decision.HOLD := E2_no_act_below_threshold m theta h
-  simp [this]
+  have hd : decision m theta = Decision.HOLD := E2_no_act_below_threshold m theta h
+  simp [hd]
+
+theorem decision_not_both (m : Metrics) (theta : Rat) :
+    Not ((decision m theta = Decision.ACT) /\ (decision m theta = Decision.HOLD)) := by
+  intro h
+  rcases h with ⟨h1, h2⟩
+  rw [h1] at h2
+  cases h2
 
 end Obsidia
