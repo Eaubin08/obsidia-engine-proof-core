@@ -1,0 +1,162 @@
+{
+  "report": "ROOT_MODIFIED_FILES_OPERATOR_REVIEW_READONLY",
+  "timestamp": "20260513_213825",
+  "date": "2026-05-13",
+  "source_audit": "BRODY_ROOT_MODIFIED_FILES_AUDIT_READONLY_20260513_212700",
+
+  "preflight": {
+    "package_lock_exists": true,
+    "package_lock_tracked": false,
+    "package_lock_status": "UNTRACKED (??) — not in git index, likely gitignored",
+    "package_lock_express_version": "4.22.1",
+    "package_json_express_version": "^4.22.1",
+    "lockfile_consistent": true
+  },
+
+  "decisions": {
+
+    "X108_FIXTURES": {
+      "files": ["examples/bank_normal.json", "examples/bank_suspicious.json"],
+      "operator_decision": "NEEDS_SCHEMA_DECISION",
+      "risk_level": "LOW",
+      "can_stage_now": false,
+      "requires_patch": false,
+      "requires_proof_sentinel": false,
+      "analysis": {
+        "bank_normal": {
+          "market_verdict": "ACT",
+          "x108_gate": "ALLOW",
+          "vocabulary_conflict": true,
+          "interpretation": "'market_verdict=ACT' uses pre-ALLOW vocabulary. 'x108_gate=ALLOW' uses new ALLOW/BLOCK/HOLD. These may intentionally represent different system layers (market layer vs X108 gate layer), OR market_verdict should be updated to 'ALLOW' for consistency.",
+          "bank_suspicious_coherent": true,
+          "note": "bank_suspicious.json: market_verdict=BLOCK + x108_gate=BLOCK — fully consistent. Only bank_normal has the ACT/ALLOW split."
+        }
+      },
+      "options": {
+        "KEEP_AS_IS": "Accept that market_verdict and x108_gate are two distinct semantic layers. ACT = market layer decision (execute), ALLOW = X108 gate decision (permit). Document the distinction.",
+        "REPAIR_MARKET_VERDICT_TO_ALLOW": "Unify vocabulary: replace market_verdict=ACT with market_verdict=ALLOW in bank_normal.json. Makes both files use ALLOW/BLOCK/HOLD throughout.",
+        "NEEDS_SCHEMA_DECISION": "RECOMMENDED — operator must decide whether market_verdict and x108_gate represent distinct layers (KEEP) or should be unified (REPAIR). Cannot stage until clarified."
+      },
+      "recommended_next_action": "OPERATOR_SCHEMA_CLARIFICATION — decide if market_verdict=ACT is intentional dual-layer semantics or a vocabulary artifact from ACT→ALLOW transition"
+    },
+
+    "PROOF_RESULTS": {
+      "files": [
+        "proofs/PROOFKIT_REPORT.json",
+        "proofs/V18_7/results/results_v18_7.json",
+        "proofs/V18_8/results/results_v18_8.json"
+      ],
+      "operator_decision": "COMMIT_SEPARATE_OK",
+      "risk_level": "NONE",
+      "can_stage_now": true,
+      "requires_patch": false,
+      "requires_proof_sentinel": false,
+      "analysis": {
+        "PROOFKIT_REPORT_json": {
+          "overall": "PASS — unchanged",
+          "all_checks_pass": true,
+          "change": "timestamp 2026-03-11 → 2026-04-11 + stdout path updated (linux → Windows external workspace)",
+          "semantic_impact": "NONE",
+          "note": "Path C:\\Users\\User\\Downloads\\OBSIDIA_CANONICAL_WORKSPACE\\OBSIDIA_INTEGRAL_FINAL reveals re-run from a different workspace — non-blocking"
+        },
+        "V18_7_results": {
+          "change": "WHITESPACE_ONLY — trailing newline removed",
+          "content_identical": true,
+          "semantic_impact": "NONE"
+        },
+        "V18_8_results": {
+          "change": "WHITESPACE_ONLY — trailing newline removed",
+          "content_identical": true,
+          "semantic_impact": "NONE"
+        }
+      },
+      "suggested_commit_msg": "chore: update proof results — re-run artifact + whitespace cleanup",
+      "recommended_next_action": "STAGE_AND_COMMIT_PROOF_RESULTS"
+    },
+
+    "ROOT_TOOLING": {
+      "files": ["package.json"],
+      "operator_decision": "COMMIT_SEPARATE_OK",
+      "risk_level": "NONE",
+      "can_stage_now": true,
+      "requires_patch": false,
+      "requires_proof_sentinel": false,
+      "analysis": {
+        "package_json": {
+          "change": "express ^4.21.2 → ^4.22.1",
+          "lockfile_express": "4.22.1",
+          "lockfile_consistent": true,
+          "lockfile_tracked": false,
+          "lockfile_note": "package-lock.json untracked — not to be staged. Consistent with bumped package.json.",
+          "impact": "Patch bump — no breaking changes expected in express 4.21→4.22"
+        }
+      },
+      "suggested_commit_msg": "chore: bump express 4.21 -> 4.22",
+      "recommended_next_action": "STAGE_AND_COMMIT_ROOT_TOOLING"
+    },
+
+    "TLA_SPEC_REFACTOR": {
+      "files": [
+        "proofs/tla/X108.tla",
+        "proofs/tla/X108.cfg",
+        "proofs/tla/X108_MC.cfg",
+        "proofs/tla/DistributedX108.tla",
+        "proofs/tla/DistributedX108_MC.cfg"
+      ],
+      "operator_decision": "COMMIT_BLOCKED",
+      "risk_level": "MEDIUM",
+      "can_stage_now": false,
+      "requires_patch": false,
+      "requires_proof_sentinel": true,
+      "analysis": {
+        "X108_tla": {
+          "change": "baseAct:BOOLEAN → baseDecision:DecisionSet{HOLD,ALLOW,BLOCK}; SafetyX108: decision#ACT → decision#ALLOW",
+          "semantic_coherence": "HIGH — vocabulary aligns with runtime ALLOW/BLOCK/HOLD. Safety property semantically equivalent in new vocabulary.",
+          "cfg_coherence": "PASS — X108.cfg: INVARIANT → PROPERTY SafetyX108. SafetyX108 is [] temporal formula → PROPERTY correct.",
+          "risk": "LOW — vocabulary evolution only, logic equivalent"
+        },
+        "DistributedX108_tla": {
+          "change": "SafetyDistributed: temporal [] → state predicate; Next == UNCHANGED Vars (no transitions)",
+          "semantic_impact": "SIGNIFICANT",
+          "detail": "Old: TLC verifies safety holds across ALL reachable trace states. New: TLC verifies safety on initial state only (Next==UNCHANGED means one-state model). The model no longer checks safety under state transitions — it checks only that the initial configuration satisfies the invariant.",
+          "cfg_coherence": "PASS — DistributedX108_MC.cfg uses INVARIANT SafetyDistributed, correct for state predicate",
+          "risk": "MEDIUM — potential weakening of distributed safety guarantee. Must verify intent is deliberate simplification for TLC feasibility, not accidental removal of trace checking."
+        },
+        "model_check_required": true,
+        "model_check_command": "Run TLC on X108.tla + DistributedX108.tla with updated configs — check no violations, no deadlocks, PASS",
+        "proof_sentinel_scope": ["DistributedX108.tla semantic change (temporal→state)", "X108.tla vocabulary evolution (ACT→ALLOW)"]
+      },
+      "suggested_commit_msg": "refactor: TLA+ X108 specs — ALLOW/BLOCK/HOLD vocab, simplified DistributedX108, literal constants",
+      "recommended_next_action": "TLA_MODEL_CHECK_REQUIRED — run TLC on both specs, then proof-sentinel review DistributedX108.tla semantic change before staging"
+    }
+  },
+
+  "staging_authorization": {
+    "GROUP_A_BRODY_STAGE_ALLOWED": true,
+    "GROUP_A_rationale": "Brody audit dirs in _local_audits/ are UNTRACKED and independent of the 11 modified files. git add _local_audits/BRODY_*/ does not touch modified files.",
+    "GROUP_B_STAGE_ALLOWED": true,
+    "GROUP_B_rationale": "Same as GROUP_A — untracked audit dirs, independent.",
+    "GROUP_C_STAGE_ALLOWED": false,
+    "GROUP_C_rationale": "468 CURRENT_BRODY_*.txt pointers require filter/split by module family before staging.",
+    "ROOT_MODIFIED_FILES_STAGE_ALLOWED": {
+      "PROOF_RESULTS": true,
+      "ROOT_TOOLING": true,
+      "X108_FIXTURES": false,
+      "TLA_SPEC_REFACTOR": false
+    }
+  },
+
+  "next_action": "STAGE_GROUP_A_BRODY_AUDIT_DIRS — les répertoires audit Brody (_local_audits/BRODY_*/) sont indépendants des 11 fichiers modified et peuvent être stagés immédiatement. PROOF_RESULTS et ROOT_TOOLING sont également prêts.",
+
+  "guardrails": {
+    "committed": false, "staged": false, "frozen": false,
+    "push": false, "files_modified": false, "files_restored": false
+  },
+
+  "boundary_summary": {
+    "decision_authority": "KX108_ONLY",
+    "no_commit": true, "no_stage": true, "no_freeze": true, "no_push": true
+  },
+
+  "verdict": "ROOT_MODIFIED_FILES_OPERATOR_REVIEW_DONE"
+}

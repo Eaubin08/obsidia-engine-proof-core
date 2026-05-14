@@ -1,0 +1,172 @@
+{
+  "report": "BRODY_REAL_ARCHITECTURE_MAP_READONLY",
+  "timestamp": "20260513_190155",
+  "date": "2026-05-13",
+
+  "architectural_correction": {
+    "brody_is": "LLM obsidien — l'instance LLM utilisée",
+    "brody_is_not": "un composant qui possede un LLM",
+    "brody_executes": false,
+    "brody_authorizes": false,
+    "brody_decides": false
+  },
+
+  "components": [
+    {
+      "name": "Brody = LLM obsidien",
+      "path": "obsidia-engine-candidate (hors X108, readonly reference)",
+      "role": "LLM obsidien — produit des réponses structurées à partir de contexte Graphiti",
+      "state": "DECLARED — not yet tested as complete chain",
+      "evidence": "RUNTIME_FREEZE_V1_4_12A — TERMINAL_NATIVE_RUN=true, BOUNDARY_OK=true",
+      "missing": "Chaîne complète context_packet → Brody → réponse structurée non testée",
+      "next_action": "CONTEXT_PACKET_QUERY → CONTEXT_PACKET_CONSUMER → LOCAL_RESPONSE_ENGINE",
+      "blocked_by": "API_8011_DOWN",
+      "brody_llm_obsidien": true
+    },
+    {
+      "name": "API 8011 / ObsidiaShell",
+      "path": "obsidiashell-main/obsidia_core/agent_bridge.py",
+      "adapter": "obsidiashell-main/graphiti_v20_frozen_adapter.py",
+      "role": "Surface readonly d'accès contexte Graphiti. FastAPI sur port 8011",
+      "state": "DOWN — connexion refusee ce jour (etait live dans audit f7643fd)",
+      "evidence": "api_8011_state.json — 14 OK, 0 fails lors du dernier audit",
+      "endpoints_validated": 14,
+      "mutations_blocked": 3,
+      "missing": "API down — relance requise par operateur",
+      "next_action": "cd obsidiashell-main && .venv_api8011\\Scripts\\activate && python -m uvicorn obsidia_core.api_8011:app --port 8011",
+      "live_neo4j_dependency": false,
+      "graphiti_write": false
+    },
+    {
+      "name": "Graphiti V20 frozen readonly",
+      "path": "graphiti-lab/.graphiti_runs/freeze_phase0_v20_20260506_140654/",
+      "adapter": "obsidiashell-main/graphiti_v20_frozen_adapter.py",
+      "role": "Mémoire contexte readonly. Source vérité Graphiti Phase0 V20",
+      "state": "FREEZE_PRESENT — inaccessible live (API down)",
+      "freeze_stats": {
+        "nodes": 167,
+        "rels": 477,
+        "indexed_episodes": 20,
+        "failed_episodes": 0,
+        "manifest_files": 4
+      },
+      "mode": "FROZEN_READONLY",
+      "live_neo4j_dependency": false,
+      "x108_merge_status": "NOT_MERGED",
+      "commit_status": "LOCAL_ONLY",
+      "evidence": "context_x108.json (10001 bytes), context_brody.json (2431 bytes), context_kernel.json (25473 bytes), context_canon.json (11856 bytes)",
+      "missing": "Contexte live inaccessible ce jour — API down",
+      "graphiti_write": false,
+      "graphiti_index_write": false
+    },
+    {
+      "name": "X108 = Autorité décisionnelle finale",
+      "path": "obsidia-x108-proofs/",
+      "role": "Gouverneur décisionnel final. KX108 = seul autorisé à décider",
+      "state": "SOLIDEMENT VALIDÉ — mais git dirty (sigma/tools/run_bank_enterprise_pack.py)",
+      "decision_authority": "KX108_ONLY",
+      "kernel_decision_active": false,
+      "graphiti_decision_active": false,
+      "x108_merge_status": "NOT_MERGED",
+      "evidence": "91+ pointers tous DECISION_AUTHORITY=KX108_ONLY sans exception",
+      "missing": "Aucun — boundary solide",
+      "next_action": "Inspecter sigma/tools/run_bank_enterprise_pack.py avant commit"
+    },
+    {
+      "name": "Operator loop",
+      "paths": [
+        "periphery/brody_memory_readonly/brody_human_command_packet_readonly/",
+        "periphery/brody_memory_readonly/brody_local_command_gate_readonly/",
+        "periphery/brody_memory_readonly/brody_operator_execution_protocol_readonly/",
+        "periphery/brody_memory_readonly/brody_operator_execution_receipt_readonly/",
+        "periphery/brody_memory_readonly/brody_human_output_receipt_validator_readonly/",
+        "periphery/brody_memory_readonly/brody_operator_supervised_handoff_readonly/"
+      ],
+      "role": "Protocole humain complet : command packet → gate → exécution → receipt → validation → handoff",
+      "state": "PASS — tous modules opérateur validés",
+      "evidence": "MEMORY_CONTEXT_OPERATOR_INTERACTION_TEST_READONLY_FREEZE_V1 PASS — receipts réels présents",
+      "command_gate_test": "PASS",
+      "operator_receipt_test": "PASS",
+      "missing": "Boucle complète pas encore testée avec contexte Brody LLM réel (ÉTAPE 7)",
+      "next_action": "BRODY_OPERATOR_FULL_LOOP_TEST_READONLY après test LLM chain"
+    },
+    {
+      "name": "Mémoire utilisateur candidate",
+      "path": "periphery/brody_memory_readonly/auto_triage_memory_intake_readonly/",
+      "role": "Pipeline triage mémoire : entrée → candidat → validation humaine → éventuellement Graphiti write",
+      "state": "READY — modules présents, non encore testés comme pipeline",
+      "triage_zones": ["CRISTAL", "TRANSITION", "NEANT", "REFLEX"],
+      "auto_triage": true,
+      "graphiti_index_write": false,
+      "memory_intake": false,
+      "evidence": "Module présent avec boundaries déclarés",
+      "missing": "Test end-to-end : entrée → triage → proposition candidat → validation humaine → write=false",
+      "next_action": "BRODY_AUTO_TRIAGE_MEMORY_INTAKE_READONLY (testable maintenant, sans API)"
+    },
+    {
+      "name": "Memory write boundary",
+      "role": "Frontière qui empêche toute écriture automatique Graphiti",
+      "state": "SOLIDEMENT VALIDÉ",
+      "graphiti_index_write": false,
+      "neo4j_write_executed": false,
+      "memory_intake": false,
+      "evidence": "91+ pointers tous déclarent explicitement boundaries false",
+      "missing": "Test du chemin GUARDED_MANUAL_ONLY pour confirmer requiert opérateur",
+      "next_action": "GRAPHITI_GUARDED_MANUAL_APPLY_FROM_REVIEW_DECISION test"
+    },
+    {
+      "name": "Scraping / External fetch",
+      "role": "Accès GET-only à URLs externes autorisées",
+      "state": "NON PROUVÉ RUNTIME — présence de modules mais scrape_executed=false partout",
+      "scrape_executed": false,
+      "scrape_allowed_now": false,
+      "authorization_status": "NOT_AUTHORIZED_FOR_RUNTIME",
+      "evidence": "scraping_hits.json : toutes les traces indiquent scrape_executed=false ou This does not scrape",
+      "missing": "Test GET-only avec allowlist, receipt, no POST, no write",
+      "next_action": "BRODY_EXTERNAL_FETCH_READONLY_OPERATOR_TEST"
+    },
+    {
+      "name": "Command gate",
+      "path": "periphery/brody_memory_readonly/brody_local_command_gate_readonly/brody_local_command_gate_readonly_v1.py",
+      "role": "Classifie chaque commande : READONLY/GIT_MUTATION/EXTERNAL_ACCESS/SECRET_SURFACE",
+      "state": "PASS — validé, smoke green",
+      "classifications": [
+        "readonly_api_get_status => EXTERNAL_ACCESS_COMMAND_REVIEW_REQUIRED",
+        "readonly_api_get_context => EXTERNAL_ACCESS_COMMAND_REVIEW_REQUIRED",
+        "readonly_git_status => READONLY_INSPECTION_COMMAND_HUMAN_ONLY",
+        "readonly_verify_all => LOCAL_VALIDATION_COMMAND_HUMAN_ONLY",
+        "git_commit_mutation => GIT_MUTATION_COMMAND_HUMAN_ONLY",
+        "git_push_mutation => GIT_MUTATION_COMMAND_HUMAN_ONLY",
+        "filesystem_delete => FILESYSTEM_MUTATION_COMMAND_HUMAN_ONLY",
+        "secret_read => SECRET_SURFACE_REVIEW_REQUIRED",
+        "api_post_mutation => EXTERNAL_ACCESS_COMMAND_REVIEW_REQUIRED"
+      ],
+      "missing": "Aucun",
+      "next_action": "Aucune — module complet"
+    }
+  ],
+
+  "flow": {
+    "description": "Flux complet attendu API → contexte → Brody → réponse → receipt → X108",
+    "steps": [
+      {"step": 1, "label": "Opérateur → commande", "state": "VALIDATED"},
+      {"step": 2, "label": "Command Gate → classification", "state": "VALIDATED"},
+      {"step": 3, "label": "Opérateur exécute → API 8011 GET /graph/v20/frozen/context", "state": "BLOCKED_API_DOWN"},
+      {"step": 4, "label": "API 8011 → graphiti_v20_frozen_adapter → context packet", "state": "BLOCKED_API_DOWN"},
+      {"step": 5, "label": "Context packet → Brody LLM obsidien", "state": "NOT_YET_TESTED"},
+      {"step": 6, "label": "Brody → réponse structurée (sans ACT, sans verdict)", "state": "NOT_YET_TESTED"},
+      {"step": 7, "label": "Réponse → human output receipt validator", "state": "VALIDATED_STRUCTURAL"},
+      {"step": 8, "label": "Receipt opérateur signé", "state": "VALIDATED_STRUCTURAL"},
+      {"step": 9, "label": "Handoff supervisé", "state": "VALIDATED_STRUCTURAL"},
+      {"step": 10, "label": "X108 = seul décideur", "state": "VALIDATED"}
+    ]
+  },
+
+  "guardrails": {
+    "committed": false,
+    "frozen": false,
+    "push": false,
+    "x108_modification": false,
+    "autres_repos_modification": false
+  }
+}

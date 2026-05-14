@@ -1,0 +1,101 @@
+{
+  "report": "BRODY_GROUP_A_STAGE_DRY_RUN_REPAIR_V2_READONLY",
+  "timestamp": "20260513_224008",
+  "date": "2026-05-13",
+  "mode": "READONLY_DRY_RUN",
+  "decision_authority": "KX108_ONLY",
+
+  "v1_comparison": {
+    "v1_report": "_local_audits/BRODY_GROUP_A_STAGE_DRY_RUN_READONLY_20260513_215627/",
+    "v1_directories": 20,
+    "v1_files": 172,
+    "v1_status": "INVALID_CONTAMINATED_BY_EXCLUDED_DIRS",
+    "v1_contamination": [
+      "BRODY_REAL_STATE_DECISION_REPORT_READONLY_20260513_205523/ — premier run échoué/incomplet",
+      "BRODY_REAL_STATE_AUDIT_READONLY_20260513_103158/ — hors whitelist GROUP_A"
+    ]
+  },
+
+  "v2_summary": {
+    "v2_status": "VALID_STRICT_WHITELIST",
+    "total_directories": 19,
+    "whitelist_directories": 18,
+    "v2_dir_itself": 1,
+    "files_in_whitelist": 131,
+    "files_v2_dir": 5,
+    "total_files": 136
+  },
+
+  "whitelist_directories": [
+    {"dir": "_local_audits/BRODY_POINTERS_TRIAGE_READONLY_20260513_190155/", "files": 2},
+    {"dir": "_local_audits/BRODY_REAL_ARCHITECTURE_MAP_READONLY_20260513_190155/", "files": 2},
+    {"dir": "_local_audits/BRODY_LLM_OBSIDIEN_CONTEXT_RESPONSE_TEST_READONLY_20260513_190155/", "files": 2},
+    {"dir": "_local_audits/BRODY_CONTEXT_PACKET_CHAIN_TEST_READONLY_20260513_192629/", "files": 9},
+    {"dir": "_local_audits/BRODY_API_MEMORY_CONTEXT_READONLY_20260513_194604/", "files": 12},
+    {"dir": "_local_audits/BRODY_USER_MEMORY_INTAKE_CANDIDATE_READONLY_20260513_194604/", "files": 14},
+    {"dir": "_local_audits/BRODY_EXTERNAL_FETCH_READONLY_OPERATOR_TEST_20260513_203216/", "files": 14},
+    {"dir": "_local_audits/BRODY_OPERATOR_FULL_LOOP_TEST_READONLY_20260513_204510/", "files": 24},
+    {"dir": "_local_audits/BRODY_REAL_STATE_DECISION_REPORT_READONLY_20260513_205557/", "files": 21},
+    {"dir": "_local_audits/SIGMA_TOOLS_DIRTY_INSPECTION_READONLY_20260513_205917/", "files": 4},
+    {"dir": "_local_audits/SIGMA_TOOLS_DIRTY_REVERT_APPLIED_READONLY_20260513_210248/", "files": 3},
+    {"dir": "_local_audits/BRODY_SESSION_CHECKPOINT_20260513_FINAL/", "files": 1},
+    {"dir": "_local_audits/BRODY_COMMIT_CANDIDATE_AUDIT_READONLY_20260513_211832/", "files": 6},
+    {"dir": "_local_audits/BRODY_NEXT_BUILD_ROADMAP_READONLY_20260513_212134/", "files": 3},
+    {"dir": "_local_audits/BRODY_ROOT_MODIFIED_FILES_AUDIT_READONLY_20260513_212700/", "files": 4},
+    {"dir": "_local_audits/ROOT_MODIFIED_FILES_OPERATOR_REVIEW_READONLY_20260513_213825/", "files": 3},
+    {"dir": "_local_audits/ROOT_MODIFIED_FILES_OPERATOR_DECISIONS_APPLIED_READONLY_20260513_214642/", "files": 3},
+    {"dir": "_local_audits/TLA_SPEC_REFACTOR_REPAIR_READONLY_20260513_215627/", "files": 4},
+    {"dir": "_local_audits/BRODY_GROUP_A_STAGE_DRY_RUN_REPAIR_V2_READONLY_20260513_224008/", "files": 5, "note": "V2 dir itself"}
+  ],
+
+  "excluded_dirs": [
+    {"dir": "_local_audits/BRODY_REAL_STATE_DECISION_REPORT_READONLY_20260513_205523/", "reason": "premier run échoué/incomplet"},
+    {"dir": "_local_audits/BRODY_REAL_STATE_AUDIT_READONLY_20260513_103158/", "reason": "hors whitelist GROUP_A — non demandé"}
+  ],
+
+  "exclusion_checks": {
+    "excluded_205523_present": false,
+    "excluded_103158_present": false,
+    "tla_files_in_group_a": false,
+    "examples_in_group_a": false,
+    "package_json_in_group_a": false,
+    "package_lock_in_group_a": false,
+    "current_brody_root_pointers_in_group_a": false,
+    "secret_matches": 0,
+    "runtime_log_matches": 0,
+    "false_positive_noted": "negative_tests/secret_pattern.json — audit record, blocked:true, no credential stored",
+    "all_clear": true
+  },
+
+  "brody_llm_memory_continuity": {
+    "brody_llm_current_status": "CONTROLLED_OPERATOR_LOOP_VALIDATED",
+    "memory_current_status": "READONLY_CANDIDATE_ONLY",
+    "low_material_patch_next": true,
+    "post_human_review_pending": true,
+    "graphiti_candidate_prep_pending": true,
+    "writable_memory_active": false,
+    "external_fetch_status": "GET_ONLY_VALIDATED",
+    "runtime_binding_ready": false,
+    "x108_merge_ready": false,
+    "next_brody_memory_action": "LOW_MATERIAL_PATCH_CANDIDATE_READONLY"
+  },
+
+  "next_actions": {
+    "next_git_action": "STAGE_GROUP_A_AFTER_OPERATOR_APPROVAL",
+    "next_brody_memory_action": "LOW_MATERIAL_PATCH_CANDIDATE_READONLY",
+    "next_tla_action": "COMMIT_TLA_FILES_AFTER_OPERATOR_APPROVAL"
+  },
+
+  "commit_msg": "audit: Brody readonly steps 1-8 + sigma cleanup 2026-05-13",
+
+  "guardrails": {
+    "staged": false,
+    "committed": false,
+    "frozen": false,
+    "push": false
+  },
+
+  "ready_to_stage_group_a": true,
+
+  "verdict": "BRODY_GROUP_A_STAGE_DRY_RUN_REPAIR_V2_READONLY_DONE"
+}

@@ -1,0 +1,100 @@
+{
+  "report": "BRODY_COMMIT_CANDIDATE_AUDIT_READONLY_REPORT_V2",
+  "version": "V2",
+  "timestamp": "20260513_211832",
+  "repair_timestamp": "20260513_212700",
+  "date": "2026-05-13",
+
+  "v1_errors_corrected": [
+    "repo_path: 'obsidia-x128-proofs' → 'obsidia-x108-proofs'",
+    "MD artefact: 'ADONLY' supprimé du champ timestamp",
+    "READY_FOR_COMMIT: now explicitly false with reason",
+    "STAGING_BLOCKED_BY_ROOT_MODIFIED_FILES: added true",
+    "GROUP_C_POINTERS_NEED_FILTER: added true",
+    "NO_STAGE_EXECUTED: added true",
+    "NO_COMMIT_EXECUTED: added true",
+    "COMMIT_CANDIDATE_AUDIT_STATUS: BLOCKED_PENDING_ROOT_MODIFIED_FILES_AUDIT"
+  ],
+
+  "critical_finding": {
+    "x108_proofs_status": "CLEAN — nothing to commit, working tree clean, up to date with origin/main",
+    "root_repo_status": "HAS_UNTRACKED + HAS_MODIFIED — commit candidates in root repo (obsidia-engine-proof-core)",
+    "pointer_count_actual": 468,
+    "pointer_count_step8_estimate": "~90",
+    "pointer_discrepancy": "Step 8 estimate was ~90; actual count is 468 — accumulated over multiple sessions",
+    "root_modified_files": 11,
+    "root_modified_files_audited": false,
+    "root_modified_files_audit": "BRODY_ROOT_MODIFIED_FILES_AUDIT_READONLY_20260513_212700"
+  },
+
+  "repos": {
+    "root": {
+      "path": "C:\\Users\\User\\Desktop\\obsidia-engine-proof-core",
+      "status": "UNTRACKED_FILES_PRESENT + MODIFIED_FILES_11",
+      "modified_files_audited": false,
+      "modified_files_audit_ref": "BRODY_ROOT_MODIFIED_FILES_AUDIT_READONLY_20260513_212700"
+    },
+    "x108_proofs": {
+      "path": "C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\obsidia-x108-proofs",
+      "status": "CLEAN",
+      "verify_all": "PASS"
+    }
+  },
+
+  "commit_groups": {
+    "GROUP_A": {
+      "label": "Current session audit dirs — Steps 1-8 + sigma + checkpoint",
+      "repo": "root (obsidia-engine-proof-core)",
+      "files_approx": 107,
+      "ready": true,
+      "blocked_by": "ROOT_MODIFIED_FILES_AUDIT_PENDING — must classify first",
+      "suggested_commit_msg": "audit: Brody readonly steps 1-8 + sigma cleanup 2026-05-13"
+    },
+    "GROUP_B": {
+      "label": "Prior session Brody pipeline audit dirs — post_human_review + graphiti_prep",
+      "repo": "root (obsidia-engine-proof-core)",
+      "files_approx": 15,
+      "ready": true,
+      "blocked_by": "ROOT_MODIFIED_FILES_AUDIT_PENDING",
+      "suggested_commit_msg": "audit: Brody post_human_review + graphiti_candidate_prep readonly modules 2026-05-13"
+    },
+    "GROUP_C": {
+      "label": "CURRENT_BRODY_*.txt pointer files",
+      "repo": "root (obsidia-engine-proof-core)",
+      "file_count": 468,
+      "ready": false,
+      "blocked_by": "FILTER_REQUIRED — 468 is too large for a single unreviewed commit. Operator must decide: commit by module family, or deduplicate/filter first.",
+      "group_c_pointers_need_filter": true,
+      "suggested_approach": "Split by module family prefix (API_BRIDGE, AUTO_TRIAGE, GRAPHITI, CONTEXT_PACKET, etc.) — staged as separate commits per family"
+    }
+  },
+
+  "do_not_stage": [
+    {"path": "_local_audits/step8_orchestrator.py", "reason": "Temp script"},
+    {"path": "_local_audits/BRODY_REAL_STATE_DECISION_REPORT_READONLY_20260513_205523/", "reason": "Failed first run"},
+    {"path": "api8011_boot.log + api8011_boot.log.err", "reason": "Runtime logs ephemeral"}
+  ],
+
+  "status_flags": {
+    "READY_FOR_COMMIT":                        false,
+    "STAGING_BLOCKED_BY_ROOT_MODIFIED_FILES":  true,
+    "GROUP_C_POINTERS_NEED_FILTER":            true,
+    "NO_STAGE_EXECUTED":                       true,
+    "NO_COMMIT_EXECUTED":                      true,
+    "ROOT_MODIFIED_FILES_AUDITED":             true,
+    "ROOT_MODIFIED_FILES_AUDIT_REF":           "BRODY_ROOT_MODIFIED_FILES_AUDIT_READONLY_20260513_212700"
+  },
+
+  "guardrails": {
+    "committed": false, "staged": false, "frozen": false,
+    "push": false, "x108_modification": false, "readonly_audit_only": true
+  },
+
+  "boundary_summary": {
+    "decision_authority": "KX108_ONLY",
+    "no_commit": true, "no_stage": true, "no_freeze": true, "no_push": true
+  },
+
+  "commit_candidate_audit_status": "BLOCKED_PENDING_ROOT_MODIFIED_FILES_AUDIT",
+  "verdict": "BRODY_COMMIT_CANDIDATE_AUDIT_READONLY_REPAIR_V2_DONE"
+}

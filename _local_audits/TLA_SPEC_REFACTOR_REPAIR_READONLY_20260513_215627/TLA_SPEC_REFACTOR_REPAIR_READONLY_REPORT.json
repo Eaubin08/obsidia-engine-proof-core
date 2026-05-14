@@ -1,0 +1,111 @@
+{
+  "report": "TLA_SPEC_REFACTOR_REPAIR_READONLY",
+  "timestamp": "20260513_215627",
+  "date": "2026-05-13",
+  "mode": "READONLY",
+  "decision_authority": "KX108_ONLY",
+
+  "tlc_results": {
+    "X108": {
+      "spec": "proofs/tla/X108.tla",
+      "config": "proofs/tla/X108_MC.cfg",
+      "result": "PASS",
+      "distinct_states": 396,
+      "property": "SafetyX108",
+      "property_type": "PROPERTY (temporal [])"
+    },
+    "DistributedX108": {
+      "spec": "proofs/tla/DistributedX108.tla",
+      "config": "proofs/tla/DistributedX108_MC.cfg",
+      "result": "PASS",
+      "distinct_states": 2640,
+      "total_states_generated": 6972240,
+      "property": "SafetyDistributed",
+      "property_type": "PROPERTY (temporal [])"
+    }
+  },
+
+  "verify_all_result": "PASS",
+  "verify_all_checks": {
+    "V18_3_1_seal_verify": true,
+    "V18_3_1_root_hash_verify": true,
+    "V18_7_checker_run": true,
+    "V18_7_invariants": true,
+    "V18_8_checker_run": true,
+    "V18_8_invariants": true
+  },
+
+  "repairs": {
+    "DistributedX108.tla": {
+      "status": "REPAIRED",
+      "issues_fixed": [
+        "Next == UNCHANGED Vars → restored real Next with primed variables",
+        "SafetyDistributed missing [] → restored [] temporal operator",
+        "honest \\subseteq NodeIds(N) → honest \\in SUBSET NodeIds(N) for TLC enumeration",
+        "Removed CONSTANTS FMax/TauMax/ElapsedMin/ElapsedMax (undeclared in old cfg) — inlined values"
+      ],
+      "temporal_guarantee_preserved": true
+    },
+    "DistributedX108_MC.cfg": {
+      "status": "REPAIRED",
+      "issues_fixed": [
+        "Removed undeclared CONSTANTS block (FMax=1, TauMax=5, ElapsedMin=0, ElapsedMax=10)",
+        "INVARIANT SafetyDistributed → PROPERTY SafetyDistributed",
+        "Added CHECK_DEADLOCK FALSE"
+      ]
+    },
+    "X108.tla": {
+      "status": "RESTORED_REFACTORED",
+      "issues_fixed": [
+        "Restored Integers to EXTENDS (was missing in git-tracked version)",
+        "GateDecision params renamed t/i/e/d to avoid VARIABLE name conflicts",
+        "baseAct:BOOLEAN → baseDecision \\in DecisionSet {HOLD,ALLOW,BLOCK}",
+        "decision # ACT → decision # ALLOW (new X108 vocabulary)",
+        "decision deterministic via GateDecision (not free variable)"
+      ],
+      "safety_x108_temporal": true,
+      "vocabulary": "ALLOW_BLOCK_HOLD"
+    },
+    "X108.cfg": {
+      "status": "FIXED",
+      "issues_fixed": [
+        "INVARIANT SafetyX108 → PROPERTY SafetyX108 (temporal formula)"
+      ]
+    },
+    "X108_MC.cfg": {
+      "status": "FIXED",
+      "issues_fixed": [
+        "INVARIANT SafetyX108 → PROPERTY SafetyX108",
+        "Added CONSTANTS TauMax=5, ElapsedMin=0, ElapsedMax=10",
+        "Added CHECK_DEADLOCK FALSE"
+      ]
+    }
+  },
+
+  "unblock_conditions_satisfied": {
+    "tlc_pass_x108": true,
+    "tlc_pass_distributed_x108": true,
+    "safety_distributed_temporal_guarantee_preserved": true,
+    "next_unchanged_intentional": false,
+    "all_conditions_met": true
+  },
+
+  "tla_spec_refactor_decision_updated": "COMMIT_BLOCKED → COMMIT_OK",
+
+  "guardrails": {
+    "committed": false,
+    "staged": false,
+    "frozen": false,
+    "push": false,
+    "files_modified": true,
+    "files_modified_list": [
+      "proofs/tla/X108.tla",
+      "proofs/tla/X108.cfg",
+      "proofs/tla/X108_MC.cfg",
+      "proofs/tla/DistributedX108.tla",
+      "proofs/tla/DistributedX108_MC.cfg"
+    ]
+  },
+
+  "verdict": "TLA_SPEC_REFACTOR_REPAIR_READONLY_DONE"
+}

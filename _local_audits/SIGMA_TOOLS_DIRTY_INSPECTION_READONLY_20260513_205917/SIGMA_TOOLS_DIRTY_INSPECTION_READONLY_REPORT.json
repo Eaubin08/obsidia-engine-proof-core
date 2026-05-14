@@ -1,0 +1,88 @@
+{
+  "report": "SIGMA_TOOLS_DIRTY_INSPECTION_READONLY",
+  "timestamp": "20260513_205917",
+  "date": "2026-05-13",
+
+  "file_inspected": "sigma/tools/run_bank_enterprise_pack.py",
+  "repo": "obsidia-x108-proofs",
+  "git_repo_path": "C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\obsidia-x108-proofs",
+  "dirty": true,
+  "staged": false,
+  "committed": false,
+
+  "diff_summary": {
+    "files_changed": 1,
+    "lines_added": 1,
+    "lines_removed": 1,
+    "net_lines": 0,
+    "hunk_location": "line 108, function main()",
+    "change_description": "Trailing whitespace added to closing brace of dictionary literal. Line changed from '    }' to '    } ' (one trailing space). Zero functional difference.",
+    "change_type": "WHITESPACE_ONLY",
+    "functional_impact": "NONE",
+    "semantic_impact": "NONE"
+  },
+
+  "change_detail": {
+    "line_before": "    }",
+    "line_after": "    } ",
+    "trailing_chars_added": 1,
+    "trailing_char_type": "SPACE",
+    "context": "Closing brace of summary dict in main() function, before summary_json.write_text() call",
+    "behaviorally_equivalent": true
+  },
+
+  "session_analysis": {
+    "touched_by_brody_steps_3_to_8": false,
+    "touched_this_session": false,
+    "pre_existing_dirty_state": true,
+    "sigma_tools_touched_in_any_report": false,
+    "evidence": "guardrail sigma_tools_touched=false in steps 5-8 reports; git status dirty since before session start (confirmed in session context summary)"
+  },
+
+  "brody_steps_relation": {
+    "step3_lllm_obsidien_context": false,
+    "step4_api_memory_context":    false,
+    "step5_user_memory_intake":    false,
+    "step6_external_fetch":        false,
+    "step7_operator_full_loop":    false,
+    "step8_decision_report":       false,
+    "related_to_brody_chain":      false
+  },
+
+  "classification": "REVERT_CANDIDATE",
+  "classification_rationale": "Single trailing space on closing brace. Zero functional impact. Zero semantic impact. Pre-dates this session. Unrelated to any Brody audit work. A clean revert eliminates the only remaining blocker for commit candidate status of the 8 validated components.",
+
+  "options_considered": {
+    "KEEP_FOR_OPERATOR_REVIEW": "Unnecessary — change is trivial and inspected",
+    "REVERT_CANDIDATE": "RECOMMENDED — trailing whitespace, no value, clean revert unblocks commit",
+    "COMMIT_CANDIDATE_AFTER_REVIEW": "Possible but wasteful — committing a trailing space adds noise to history",
+    "DO_NOT_COMMIT": "Partial — correct to not commit as-is, but revert is better than leaving dirty"
+  },
+
+  "next_action": "REVERT_CANDIDATE — operator executes: git -C obsidia-x108-proofs restore sigma/tools/run_bank_enterprise_pack.py — then repo is clean and 8 NEXT_COMMIT_CANDIDATE components can be staged",
+
+  "boundary_summary": {
+    "decision_authority":      "KX108_ONLY",
+    "readonly":                true,
+    "no_stage":                true,
+    "no_commit":               true,
+    "no_revert":               true,
+    "no_freeze":               true,
+    "no_push":                 true,
+    "file_modified_by_audit":  false,
+    "file_staged_by_audit":    false,
+    "file_reverted_by_audit":  false
+  },
+
+  "guardrails": {
+    "committed":           false,
+    "frozen":              false,
+    "push":                false,
+    "x108_modification":   false,
+    "sigma_tools_touched": false,
+    "faux_pass_crees":     false,
+    "file_reverted":       false
+  },
+
+  "verdict": "SIGMA_TOOLS_DIRTY_INSPECTION_READONLY_DONE"
+}

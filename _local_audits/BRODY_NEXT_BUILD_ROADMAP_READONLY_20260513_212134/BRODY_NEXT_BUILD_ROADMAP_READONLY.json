@@ -1,0 +1,144 @@
+{
+  "report": "BRODY_NEXT_BUILD_ROADMAP_READONLY",
+  "timestamp": "20260513_212134",
+  "date": "2026-05-13",
+  "source_checkpoint": "_local_audits/BRODY_SESSION_CHECKPOINT_20260513_FINAL/BRODY_SESSION_CHECKPOINT_FINAL.md",
+
+  "validated_summary": {
+    "context_packet_chain":    "CHAIN_PASS — BRODY_CONTEXT_PACKET_CHAIN_TEST_READONLY_20260513_192629",
+    "api_8011":                "LIVE FROZEN_READONLY — nodes=167 rels=477 episodes=20",
+    "graphiti_v20_frozen":     "FROZEN_READONLY — x108_merge_status=NOT_MERGED",
+    "neo4j_brody_memory_doc":  "LIVE — 3267 nodes — LOW_MATERIAL (text_preview absent coalesce)",
+    "user_memory_candidate":   "PARTIAL_PASS — auto_triage PASS 48/48 — post_human pending",
+    "external_fetch":          "PASS — GET-only allowlist — 7/7 negative blocked — 67/67 smoke",
+    "operator_full_loop":      "PASS — 5 scenarios — dangerous_mutation BLOCKED — 115/115 smoke",
+    "decision_report":         "PASS — 16 components — 62/62 smoke",
+    "commit_candidate_audit":  "DONE — BRODY_COMMIT_CANDIDATE_AUDIT_READONLY_20260513_211832",
+    "sigma_restore":           "DONE — whitespace-only reverted — repo clean",
+    "x108_repo":               "CLEAN — nothing to commit",
+    "verify_all":              "PASS",
+    "total_smokes":            292
+  },
+
+  "remaining_work": {
+    "A_low_material": {
+      "status": "IDENTIFIED_NOT_PATCHED",
+      "blocking": false,
+      "file": "brody_context_packet_query_readonly_v1.py",
+      "cause": "coalesce missing p.text_preview — 3267/3267 nodes have text_preview but chain gets empty excerpts",
+      "patch": "add p.text_preview to coalesce expression",
+      "requires": "operator approval + smoke before/after"
+    },
+    "B_post_human_review": {
+      "status": "READY_PENDING_PRECURSOR",
+      "blocking": "for this step only",
+      "precursor": "SESSION_CLOSE_DECISION_APPLY — 51 human decisions (CRISTAL/TRANSITION/NEANT)",
+      "module": "BRODY_POST_HUMAN_REVIEW_MEMORY_TRIAGE_READONLY_V1"
+    },
+    "C_graphiti_candidate_prep": {
+      "status": "READY_PENDING_PRECURSOR",
+      "blocking": "for this step only",
+      "precursor": "output of post_human_review (BRODY_POST_HUMAN_MEMORY_CANDIDATES_READONLY.jsonl)",
+      "mode": "DRY_RUN only — graphiti_index_write=false"
+    },
+    "D_writable_memory": {
+      "status": "NOT_ACTIVE",
+      "graphiti_write": false,
+      "neo4j_write": false,
+      "requires": "operator protocol + gate + KX108 authorization + post_human_review + dry-run verified"
+    },
+    "E_brody_llm_obsidien": {
+      "validated": ["operator loop", "structured response", "readonly context injection", "reflex dangerous block", "brody_executed=false"],
+      "not_yet_validated": ["durable memory intake", "real document ingestion post post_human_review", "runtime autonomy (not authorized — KX108_ONLY)", "real external providers beyond example.com"]
+    },
+    "F_external_fetch_real_world": {
+      "validated": "GET-only example.com allowlisted",
+      "not_done": ["real business API providers", "multi-domain allowlist", "POST (remains forbidden)", "crawling (permanent boundary)"]
+    },
+    "G_runtime_binding": {
+      "status": "READY_FOR_RUNTIME_BINDING=false",
+      "requires": "full validate + post_human_review + graphiti_prep + KX108 authorization"
+    },
+    "H_x108_merge": {
+      "status": "NOT_MERGED — READY_FOR_X108_MERGE=false",
+      "requires": "verify_all PASS (done) + runtime binding + full architecture review + KX108 explicit authorization",
+      "irreversible": true
+    },
+    "I_commit_candidate": {
+      "audit": "DONE — BRODY_COMMIT_CANDIDATE_AUDIT_READONLY_20260513_211832",
+      "next": "BRODY_COMMIT_STAGE_PLAN_READONLY",
+      "group_A_files": 107,
+      "group_B_files": 15,
+      "group_C_files": 468,
+      "blocker": "11 modified files (examples/ package.json proofs/) — unknown origin — require separate inspection before any git add"
+    }
+  },
+
+  "recommended_order": [
+    {"step": 1,  "action": "BRODY_COMMIT_STAGE_PLAN_READONLY",                        "requires_claude": true,  "prereq": "commit candidate audit DONE"},
+    {"step": 2,  "action": "Operator approval du plan de staging",                     "requires_claude": false, "prereq": "step 1"},
+    {"step": 3,  "action": "Commit GROUP_A (steps 1-8 audit dirs)",                    "requires_claude": false, "prereq": "step 2"},
+    {"step": 4,  "action": "Commit GROUP_B (post_human_review + graphiti_prep)",       "requires_claude": false, "prereq": "step 2"},
+    {"step": 5,  "action": "Commit GROUP_C (468 CURRENT_BRODY_*.txt)",                 "requires_claude": false, "prereq": "step 2"},
+    {"step": 6,  "action": "Audit 11 modified files (examples/ proofs/)",              "requires_claude": true,  "prereq": "none"},
+    {"step": 7,  "action": "LOW_MATERIAL_PATCH_CANDIDATE_READONLY",                    "requires_claude": true,  "prereq": "operator approval"},
+    {"step": 8,  "action": "BRODY_SESSION_CLOSE_DECISION_APPLY_PRECURSOR_READONLY",    "requires_claude": "hybrid", "prereq": "51 human decisions ready"},
+    {"step": 9,  "action": "BRODY_POST_HUMAN_REVIEW_MEMORY_TRIAGE_READONLY",           "requires_claude": true,  "prereq": "step 8"},
+    {"step": 10, "action": "BRODY_GRAPHITI_CANDIDATE_PREP_READONLY",                   "requires_claude": true,  "prereq": "step 9"},
+    {"step": 11, "action": "BRODY_GRAPHITI_IMPORT_DRY_RUN_REVIEW_GATE_READONLY",       "requires_claude": true,  "prereq": "step 10"},
+    {"step": 12, "action": "BRODY_WRITABLE_MEMORY_PROTOCOL_CANDIDATE_READONLY",        "requires_claude": true,  "prereq": "steps 9-11 + human gate"},
+    {"step": 13, "action": "BRODY_WORLD_PROVIDER_MATRIX_READONLY",                     "requires_claude": true,  "prereq": "none"},
+    {"step": 14, "action": "BRODY_RUNTIME_BINDING_RISK_REVIEW_READONLY",               "requires_claude": true,  "prereq": "steps 1-13"}
+  ],
+
+  "next_action": "BRODY_COMMIT_STAGE_PLAN_READONLY",
+  "next_action_note": "BRODY_COMMIT_CANDIDATE_AUDIT_READONLY already completed (20260513_211832). Next is staging plan.",
+
+  "without_claude": [
+    "Read MD reports in _local_audits/*/reports/",
+    "git status in both repos",
+    "Run verify_all.py",
+    "Open audit folders",
+    "Read CURRENT_BRODY_*.txt pointers",
+    "Compare checkpoints between sessions",
+    "Copy resume prompts",
+    "Inspect diff of 11 modified files with git diff",
+    "Prepare list of 51 memory decisions for SESSION_CLOSE_DECISION_APPLY",
+    "Decide GROUP_C split strategy (468 pointers in one or multiple commits)"
+  ],
+
+  "requires_claude": [
+    "BRODY_COMMIT_STAGE_PLAN_READONLY — exact git add commands per group",
+    "Audit 11 modified files — structured diff classification",
+    "LOW_MATERIAL patch — read query file, propose minimal patch, write smoke",
+    "Smoke test creation",
+    "post_human_review protocol structuring",
+    "Graphiti import dry-run orchestration",
+    "Writable memory gate + boundary enforcement protocol",
+    "BRODY_RUNTIME_BINDING_RISK_REVIEW_READONLY"
+  ],
+
+  "permanent_prohibitions": {
+    "no_commit_without_audit": true,
+    "no_freeze": true,
+    "no_push": true,
+    "no_graphiti_write": true,
+    "no_neo4j_write": true,
+    "no_memory_intake": true,
+    "no_runtime_binding": true,
+    "no_x108_merge": true,
+    "no_post_no_crawler": true,
+    "no_secret_read": true,
+    "brody_executed": false,
+    "brody_authorize_allowed": false,
+    "decision_authority": "KX108_ONLY"
+  },
+
+  "guardrails": {
+    "committed": false, "frozen": false, "push": false,
+    "x108_modification": false, "sigma_tools_touched": false,
+    "faux_pass_crees": false, "build_launched": false
+  },
+
+  "verdict": "BRODY_NEXT_BUILD_ROADMAP_READONLY_DONE"
+}

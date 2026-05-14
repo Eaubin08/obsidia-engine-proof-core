@@ -1,0 +1,220 @@
+{
+  "report": "BRODY_ROOT_MODIFIED_FILES_AUDIT_READONLY",
+  "timestamp": "20260513_212700",
+  "date": "2026-05-13",
+  "repo": "C:\\Users\\User\\Desktop\\obsidia-engine-proof-core",
+
+  "modified_files_analyzed": 11,
+
+  "files": [
+    {
+      "path": "examples/bank_normal.json",
+      "change_type": "SCHEMA_REDESIGN",
+      "description": "Format complet changé : champs de transaction bancaire (amount, channel, fraud_score...) remplacés par format décisionnel X108 (domain, decision_id, market_verdict, x108_gate, attestation_ref...)",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "SIGNIFICANT — fixture format redesigned to match X108 decision vocabulary (ALLOW/BLOCK/HOLD). market_verdict=ACT and x108_gate=ALLOW for normal case.",
+      "semantic_impact": "SIGNIFICANT — new schema aligns with decision-layer abstraction, not transaction-layer",
+      "notable": "market_verdict=ACT reste dans la fixture mais x108_gate=ALLOW — vocabulaire mixte à vérifier",
+      "commit_candidate": true,
+      "needs_operator_review": true,
+      "recommended_action": "COMMIT_CANDIDATE — après vérification cohérence market_verdict=ACT vs x108_gate=ALLOW",
+      "commit_group": "X108_FIXTURES"
+    },
+    {
+      "path": "examples/bank_suspicious.json",
+      "change_type": "SCHEMA_REDESIGN",
+      "description": "Même refactoring que bank_normal.json. Format décisionnel X108 : market_verdict=BLOCK, x108_gate=BLOCK, confidence=0.97, reason_code=FRAUD_RISK_HIGH.",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "SIGNIFICANT — fixture redesigned",
+      "semantic_impact": "SIGNIFICANT",
+      "notable": "market_verdict=BLOCK et x108_gate=BLOCK cohérents pour le cas suspect",
+      "commit_candidate": true,
+      "needs_operator_review": true,
+      "recommended_action": "COMMIT_CANDIDATE — avec bank_normal.json en même commit",
+      "commit_group": "X108_FIXTURES"
+    },
+    {
+      "path": "package.json",
+      "change_type": "DEP_BUMP",
+      "description": "express ^4.21.2 → ^4.22.1. Seul changement : 1 ligne.",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": false,
+      "functional_impact": "LOW — patch bump de dépendance Node.js",
+      "semantic_impact": "NONE",
+      "notable": "Non lié aux preuves X108 ni à Brody. Mise à jour de dépendance root frontend.",
+      "commit_candidate": true,
+      "needs_operator_review": false,
+      "recommended_action": "COMMIT_CANDIDATE — commit isolé ou avec fixtures",
+      "commit_group": "ROOT_TOOLING"
+    },
+    {
+      "path": "proofs/PROOFKIT_REPORT.json",
+      "change_type": "REGENERATED_ARTIFACT",
+      "description": "Timestamp mis à jour (2026-03-11 → 2026-04-11). Chemin stdout changé de /home/ubuntu/... à C:\\Users\\User\\Downloads\\OBSIDIA_CANONICAL_WORKSPACE\\OBSIDIA_INTEGRAL_FINAL\\... — rapport régénéré sur une machine Windows différente.",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "NONE — overall=PASS inchangé, tous checks PASS",
+      "semantic_impact": "LOW — timestamp et path de machine différente",
+      "notable": "Path C:\\Users\\User\\Downloads\\OBSIDIA_CANONICAL_WORKSPACE\\OBSIDIA_INTEGRAL_FINAL révèle une exécution depuis un workspace différent du repo courant. Non bloquant mais trace d'environnement externe.",
+      "commit_candidate": true,
+      "needs_operator_review": true,
+      "recommended_action": "COMMIT_CANDIDATE — noter que le path de référence dans stdout ne correspond pas au repo courant",
+      "commit_group": "PROOF_RESULTS"
+    },
+    {
+      "path": "proofs/V18_7/results/results_v18_7.json",
+      "change_type": "WHITESPACE_ONLY",
+      "description": "Trailing newline supprimé. Contenu JSON identique à l'octet près (valeurs, invariants, fuzz counts, theorems_claimed).",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "NONE",
+      "semantic_impact": "NONE",
+      "commit_candidate": true,
+      "needs_operator_review": false,
+      "recommended_action": "COMMIT_CANDIDATE — whitespace cleanup",
+      "commit_group": "PROOF_RESULTS"
+    },
+    {
+      "path": "proofs/V18_8/results/results_v18_8.json",
+      "change_type": "WHITESPACE_ONLY",
+      "description": "Trailing newline supprimé. Contenu JSON identique (G1-G4 invariants tous true, exemples inchangés).",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "NONE",
+      "semantic_impact": "NONE",
+      "commit_candidate": true,
+      "needs_operator_review": false,
+      "recommended_action": "COMMIT_CANDIDATE — whitespace cleanup",
+      "commit_group": "PROOF_RESULTS"
+    },
+    {
+      "path": "proofs/tla/DistributedX108.tla",
+      "change_type": "MAJOR_TLA_REFACTOR",
+      "description": "Refactoring significatif du spec TLA+ distribué X108. (1) EXTENDS: Sequences→FiniteSets. (2) CONSTANTS supprimés, valeurs inlinées dans StateOK. (3) GateDecision: params renommés (tau,irr,elapsed,baseAct)→(t,i,e,b). (4) Aggregate: prend maintenant ff explicite au lieu de variable libre f. (5) SafetyDistributed: temporal [] (...) → prédicat d'état simple. (6) Next==UNCHANGED Vars — modèle état unique, plus de transitions.",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "SIGNIFICANT — simplification du modèle (état unique vs transitions). SafetyDistributed devient un invariant de démarrage, pas temporel.",
+      "semantic_impact": "SIGNIFICANT — changement de paradigme de vérification TLC",
+      "notable": "SafetyDistributed temporal → état : le modèle ne vérifie plus les traces mais l'espace d'états initial. Décision architecturale à valider par proof-sentinel.",
+      "commit_candidate": false,
+      "needs_operator_review": true,
+      "recommended_action": "PROOF_SENTINEL_REVIEW_REQUIRED — valider que la simplification préserve la propriété de sécurité temporelle avant commit",
+      "commit_group": "TLA_SPEC_REFACTOR"
+    },
+    {
+      "path": "proofs/tla/DistributedX108_MC.cfg",
+      "change_type": "CONFIG_UPDATE",
+      "description": "Ajout section CONSTANTS (FMax=1, TauMax=5, ElapsedMin=0, ElapsedMax=10) et CHECK_DEADLOCK FALSE. Précédemment seuls SPECIFICATION et INVARIANT présents.",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "MEDIUM — DistributedX108.tla refactoré n'a plus de CONSTANTS déclarés, ce fichier les fournit pour compatibilité TLC",
+      "semantic_impact": "LOW",
+      "commit_candidate": false,
+      "needs_operator_review": true,
+      "recommended_action": "COMMIT_CANDIDATE_WITH_TLA_SPEC — commiter avec DistributedX108.tla après proof-sentinel review",
+      "commit_group": "TLA_SPEC_REFACTOR"
+    },
+    {
+      "path": "proofs/tla/X108.cfg",
+      "change_type": "CONFIG_UPDATE",
+      "description": "CONSTANTS passent de références symboliques (TauMax <- TauMax_val) à valeurs littérales (TauMax = 5). INVARIANT SafetyX108 → PROPERTY SafetyX108. Ajout CHECK_DEADLOCK FALSE.",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "MEDIUM — INVARIANT→PROPERTY change le type de vérification TLC",
+      "semantic_impact": "MEDIUM — PROPERTY vérifie les traces, INVARIANT vérifie les états",
+      "notable": "Cohérent avec SafetyX108 qui est maintenant une formule temporelle [] dans X108.tla",
+      "commit_candidate": false,
+      "needs_operator_review": true,
+      "recommended_action": "COMMIT_CANDIDATE_WITH_TLA_SPEC — avec X108.tla après review",
+      "commit_group": "TLA_SPEC_REFACTOR"
+    },
+    {
+      "path": "proofs/tla/X108.tla",
+      "change_type": "MAJOR_TLA_REFACTOR",
+      "description": "Refactoring significatif. (1) Suppression du backslash parasite en tête. (2) EXTENDS: ajout Integers. (3) baseAct:BOOLEAN→baseDecision:DecisionSet{HOLD,ALLOW,BLOCK}. (4) GateDecision: IF irr/\\elapsed<tau THEN HOLD ELSE baseAct→ELSE d (passe baseDecision directement). (5) SafetyX108: decision#\"ACT\"→decision#\"ALLOW\". (6) THEOREM Spec=>SafetyX108 supprimé.",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "SIGNIFICANT — vocabulaire décisionnel évolue de {HOLD,ACT} vers {HOLD,ALLOW,BLOCK}",
+      "semantic_impact": "SIGNIFICANT — SafetyX108 garantit désormais que decision≠ALLOW (pas decision≠ACT). Aligne la preuve formelle avec le vocabulaire runtime (ALLOW/BLOCK/HOLD).",
+      "notable": "Evolution cohérente avec les fixtures bank_*.json qui utilisent x108_gate=ALLOW/BLOCK. La suppression du THEOREM inline est attendue (TLA+ n'a pas de proof checker intégré — le THEOREM était déclaratif).",
+      "commit_candidate": false,
+      "needs_operator_review": true,
+      "recommended_action": "PROOF_SENTINEL_REVIEW_REQUIRED — valider que SafetyX108 decision#ALLOW préserve la garantie de sécurité avant commit",
+      "commit_group": "TLA_SPEC_REFACTOR"
+    },
+    {
+      "path": "proofs/tla/X108_MC.cfg",
+      "change_type": "CONFIG_UPDATE",
+      "description": "Ajout CONSTANTS (TauMax=5, ElapsedMin=0, ElapsedMax=10) et CHECK_DEADLOCK FALSE.",
+      "related_to_brody_steps_3_8": false,
+      "related_to_x108_proofs": true,
+      "functional_impact": "LOW",
+      "semantic_impact": "NONE",
+      "commit_candidate": false,
+      "needs_operator_review": true,
+      "recommended_action": "COMMIT_CANDIDATE_WITH_TLA_SPEC — avec X108.tla après review",
+      "commit_group": "TLA_SPEC_REFACTOR"
+    }
+  ],
+
+  "summary": {
+    "modified_files_analyzed": 11,
+    "brody_related": 0,
+    "x108_related": 10,
+    "unrelated": 1,
+    "needs_operator_review": 11,
+    "commit_candidate_immediate": 5,
+    "needs_proof_sentinel_review": 2,
+    "commit_group_X108_FIXTURES": 2,
+    "commit_group_PROOF_RESULTS": 3,
+    "commit_group_ROOT_TOOLING": 1,
+    "commit_group_TLA_SPEC_REFACTOR": 5
+  },
+
+  "key_findings": [
+    "AUCUN des 11 fichiers n'est lié aux étapes Brody 3-8 — tous ont une origine X108 distincte",
+    "Les 2 fichiers TLA majeurs (X108.tla, DistributedX108.tla) nécessitent proof-sentinel review avant commit",
+    "Les fixtures bank_*.json alignent le format avec le vocabulaire X108 ALLOW/BLOCK — cohérent mais market_verdict=ACT dans bank_normal.json est un mélange de vocabulaire ancien à vérifier",
+    "PROOFKIT_REPORT.json a été régénéré depuis un workspace différent (C:\\Users\\User\\Downloads\\OBSIDIA_CANONICAL_WORKSPACE) — non bloquant",
+    "Les 5 fichiers TLA doivent être commités ensemble (spec + configs)"
+  ],
+
+  "proposed_commit_groups": {
+    "commit_1_x108_fixtures": {
+      "files": ["examples/bank_normal.json", "examples/bank_suspicious.json"],
+      "msg": "fix: realign bank fixtures to X108 decision format (ALLOW/BLOCK/HOLD)",
+      "blocked_by": "operator review market_verdict=ACT vs x108_gate=ALLOW cohérence"
+    },
+    "commit_2_proof_results": {
+      "files": ["proofs/PROOFKIT_REPORT.json", "proofs/V18_7/results/results_v18_7.json", "proofs/V18_8/results/results_v18_8.json"],
+      "msg": "chore: update proof results — re-run artifacts + whitespace cleanup",
+      "blocked_by": "none"
+    },
+    "commit_3_root_tooling": {
+      "files": ["package.json"],
+      "msg": "chore: bump express 4.21 -> 4.22",
+      "blocked_by": "none"
+    },
+    "commit_4_tla_spec_refactor": {
+      "files": ["proofs/tla/X108.tla", "proofs/tla/X108.cfg", "proofs/tla/X108_MC.cfg", "proofs/tla/DistributedX108.tla", "proofs/tla/DistributedX108_MC.cfg"],
+      "msg": "refactor: TLA+ X108 specs — ALLOW/BLOCK/HOLD vocab, simplified DistributedX108, literal constants",
+      "blocked_by": "PROOF_SENTINEL_REVIEW_REQUIRED"
+    }
+  },
+
+  "next_action": "ROOT_MODIFIED_FILES_OPERATOR_REVIEW — valider : (1) market_verdict=ACT vs x108_gate=ALLOW dans bank_normal.json ; (2) proof-sentinel review X108.tla + DistributedX108.tla avant commit TLA",
+
+  "guardrails": {
+    "committed": false, "staged": false, "frozen": false,
+    "push": false, "files_modified_by_audit": false, "files_restored_by_audit": false
+  },
+
+  "boundary_summary": {
+    "decision_authority": "KX108_ONLY",
+    "no_commit": true, "no_stage": true, "no_freeze": true, "no_push": true, "readonly": true
+  },
+
+  "verdict": "BRODY_ROOT_MODIFIED_FILES_AUDIT_READONLY_DONE"
+}

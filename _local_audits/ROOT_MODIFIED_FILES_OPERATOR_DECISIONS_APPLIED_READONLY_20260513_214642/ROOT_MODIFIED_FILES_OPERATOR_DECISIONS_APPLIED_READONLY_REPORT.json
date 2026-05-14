@@ -1,0 +1,121 @@
+{
+  "report": "ROOT_MODIFIED_FILES_OPERATOR_DECISIONS_APPLIED_READONLY",
+  "timestamp": "20260513_214642",
+  "date": "2026-05-13",
+  "source_review": "ROOT_MODIFIED_FILES_OPERATOR_REVIEW_READONLY_20260513_213825",
+
+  "operator_decisions": {
+
+    "X108_FIXTURES": {
+      "decision": "KEEP_AS_IS_WITH_SCHEMA_NOTE",
+      "stage_allowed": true,
+      "rationale": "market_verdict=ACT et x108_gate=ALLOW représentent deux couches distinctes. market_verdict=ACT = intention/verdict métier proposé par le monde ou la couche domaine. x108_gate=ALLOW = autorisation de passage par la gouvernance X108. Fusionner ACT→ALLOW effacerait la distinction intention-métier vs décision-gate.",
+      "future_note": "Prévoir renommage market_verdict → domain_intent | proposed_action | world_verdict | base_decision. Pas dans ce commit.",
+      "files": ["examples/bank_normal.json", "examples/bank_suspicious.json"],
+      "commit_msg": "fix: realign bank fixtures to X108 decision format — ACT=domain intent, ALLOW=X108 gate (two distinct layers)"
+    },
+
+    "TLA_SPEC_REFACTOR": {
+      "decision": "COMMIT_BLOCKED",
+      "stage_allowed": false,
+      "tla_model_check_required": true,
+      "proof_sentinel_review_required": true,
+      "distributed_x108_temporal_restore_or_justification_required": true,
+      "rationale": "X108 est une architecture temporelle. SafetyDistributed doit conserver une vérification sur les traces/transitions, pas uniquement sur l'état initial. Le passage de [] (temporal) à prédicat d'état affaiblit potentiellement la garantie. Une justification formelle explicite (ou la restauration de la propriété temporelle) est requise avant commit.",
+      "files": ["proofs/tla/X108.tla", "proofs/tla/X108.cfg", "proofs/tla/X108_MC.cfg", "proofs/tla/DistributedX108.tla", "proofs/tla/DistributedX108_MC.cfg"],
+      "unblock_conditions": [
+        "TLC model check PASS sur X108.tla + DistributedX108.tla",
+        "proof-sentinel confirme que DistributedX108 SafetyDistributed préserve la garantie temporelle OU restaure [] autour du prédicat",
+        "Justification formelle si Next==UNCHANGED est intentionnel"
+      ]
+    },
+
+    "PROOF_RESULTS": {
+      "decision": "COMMIT_SEPARATE_OK",
+      "stage_allowed": true,
+      "files": ["proofs/PROOFKIT_REPORT.json", "proofs/V18_7/results/results_v18_7.json", "proofs/V18_8/results/results_v18_8.json"],
+      "commit_msg": "chore: update proof results — re-run artifact + whitespace cleanup"
+    },
+
+    "ROOT_TOOLING": {
+      "decision": "COMMIT_SEPARATE_OK",
+      "stage_allowed": true,
+      "files": ["package.json"],
+      "commit_msg": "chore: bump express 4.21 -> 4.22"
+    }
+  },
+
+  "staging_authorization_final": {
+    "GROUP_A_BRODY_STAGE_ALLOWED":   true,
+    "GROUP_B_STAGE_ALLOWED":          true,
+    "GROUP_C_STAGE_ALLOWED":          false,
+    "X108_FIXTURES_STAGE_ALLOWED":    true,
+    "PROOF_RESULTS_STAGE_ALLOWED":    true,
+    "ROOT_TOOLING_STAGE_ALLOWED":     true,
+    "TLA_SPEC_REFACTOR_STAGE_ALLOWED": false,
+
+    "GROUP_C_block_reason": "468 CURRENT_BRODY_*.txt pointers — filtrage par famille de module requis",
+    "TLA_block_reason": "TLC model check + proof-sentinel + temporal restore ou justification requis"
+  },
+
+  "commit_plan_authorized": [
+    {
+      "commit": 1,
+      "files": "_local_audits/BRODY_POINTERS_TRIAGE_READONLY_20260513_190155/ ... (tous GROUP_A)",
+      "msg": "audit: Brody readonly steps 1-8 + sigma cleanup 2026-05-13",
+      "authorized": true
+    },
+    {
+      "commit": 2,
+      "files": "_local_audits/BRODY_POST_HUMAN_REVIEW_MEMORY_TRIAGE_READONLY_V1_VALIDATE_20260513_025702/ + _local_audits/BRODY_GRAPHITI_CANDIDATE_PREP_FROM_POST_HUMAN_TRIAGE_READONLY_V1_VALIDATE_20260513_025913/",
+      "msg": "audit: Brody post_human_review + graphiti_candidate_prep readonly modules 2026-05-13",
+      "authorized": true
+    },
+    {
+      "commit": 3,
+      "files": "examples/bank_normal.json examples/bank_suspicious.json",
+      "msg": "fix: realign bank fixtures to X108 decision format — ACT=domain intent, ALLOW=X108 gate (two distinct layers)",
+      "authorized": true
+    },
+    {
+      "commit": 4,
+      "files": "proofs/PROOFKIT_REPORT.json proofs/V18_7/results/results_v18_7.json proofs/V18_8/results/results_v18_8.json",
+      "msg": "chore: update proof results — re-run artifact + whitespace cleanup",
+      "authorized": true
+    },
+    {
+      "commit": 5,
+      "files": "package.json",
+      "msg": "chore: bump express 4.21 -> 4.22",
+      "authorized": true
+    },
+    {
+      "commit": "BLOCKED",
+      "files": "proofs/tla/*.tla + *.cfg (5 files)",
+      "msg": "refactor: TLA+ X108 specs",
+      "authorized": false,
+      "blocked_until": "TLC model check + proof-sentinel review + temporal restore/justification"
+    },
+    {
+      "commit": "BLOCKED",
+      "files": "CURRENT_BRODY_*.txt (468 pointers)",
+      "msg": "chore: add CURRENT_BRODY_*.txt module state pointers",
+      "authorized": false,
+      "blocked_until": "Filtre par famille de module"
+    }
+  ],
+
+  "next_action": "STAGE_GROUP_A_BRODY_AUDIT_DIRS — commencer par les répertoires _local_audits/BRODY_*/ de la session courante (GROUP_A). Commits 1-5 autorisés, exécutables dans l'ordre.",
+
+  "guardrails": {
+    "committed": false, "staged": false, "frozen": false,
+    "push": false, "files_modified": false
+  },
+
+  "boundary_summary": {
+    "decision_authority": "KX108_ONLY",
+    "no_commit": true, "no_stage": true, "no_freeze": true, "no_push": true
+  },
+
+  "verdict": "ROOT_MODIFIED_FILES_OPERATOR_DECISIONS_APPLIED_READONLY_DONE"
+}

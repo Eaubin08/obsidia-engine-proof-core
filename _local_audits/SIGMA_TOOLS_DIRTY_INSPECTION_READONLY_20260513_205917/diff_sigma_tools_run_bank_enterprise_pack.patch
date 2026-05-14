@@ -1,0 +1,13 @@
+diff --git a/sigma/tools/run_bank_enterprise_pack.py b/sigma/tools/run_bank_enterprise_pack.py
+index 347616a..fddef82 100644
+--- a/sigma/tools/run_bank_enterprise_pack.py
++++ b/sigma/tools/run_bank_enterprise_pack.py
+@@ -105,7 +105,7 @@ def main():
+         "report_json": str(report_json),
+         "summary_json": str(summary_json),
+         "report_csv": str(report_csv),
+-    }
++    }
+     summary_json.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+
+     print(json.dumps(summary, indent=2, ensure_ascii=False))

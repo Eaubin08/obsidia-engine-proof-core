@@ -1,0 +1,51 @@
+{
+  "report": "SIGMA_TOOLS_DIRTY_REVERT_APPLIED_READONLY",
+  "timestamp": "20260513_210248",
+  "date": "2026-05-13",
+
+  "precursor_audit": "SIGMA_TOOLS_DIRTY_INSPECTION_READONLY_20260513_205917",
+  "precursor_classification": "REVERT_CANDIDATE",
+  "precursor_change_type": "WHITESPACE_ONLY",
+
+  "file": "sigma/tools/run_bank_enterprise_pack.py",
+  "repo": "obsidia-x108-proofs",
+  "repo_path": "C:\\Users\\User\\Desktop\\obsidia-engine-proof-core\\obsidia-x128-proofs",
+
+  "command_executed": "git -C <repo> restore -- sigma/tools/run_bank_enterprise_pack.py",
+  "restore_applied": true,
+  "revert_reason": "WHITESPACE_ONLY",
+  "functional_impact": "NONE",
+  "semantic_impact": "NONE",
+
+  "post_restore": {
+    "x108_git_clean": true,
+    "git_status_output": "",
+    "git_status_dirty_files": 0,
+    "verify_all": "PASS"
+  },
+
+  "ready_for_commit_candidate_audit": true,
+  "commit_candidate_components": 8,
+
+  "guardrails": {
+    "committed": false,
+    "frozen": false,
+    "push": false,
+    "x108_modification": false,
+    "other_files_touched": false,
+    "root_global_touched": false,
+    "pycache_cleaned": false,
+    "faux_pass_crees": false
+  },
+
+  "boundary_summary": {
+    "decision_authority": "KX108_ONLY",
+    "readonly_mode": true,
+    "no_commit": true,
+    "no_freeze": true,
+    "no_push": true,
+    "restore_scope": "sigma/tools/run_bank_enterprise_pack.py only"
+  },
+
+  "verdict": "SIGMA_TOOLS_DIRTY_REVERT_APPLIED_READONLY_PASS"
+}

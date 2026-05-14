@@ -1,0 +1,306 @@
+# BRODY_POINTERS_TRIAGE_READONLY_REPORT
+Date : 2026-05-13
+Heure : 20260513_190155
+Audit source : BRODY_REAL_STATE_AUDIT_READONLY_20260513_103158
+Total pointers trouvés par Glob : 95 (dont 4 dans sous-répertoires)
+Total pointers audit déclarés : 91
+
+---
+
+## ÉTAT CRITIQUE CONSTATÉ EN PRÉ-BUILD
+
+```
+API_8011_LIVE=false          ← DIFFÉRENT DU DERNIER AUDIT (était true)
+X108_GIT_CLEAN=false         ← sigma/tools/run_bank_enterprise_pack.py modifié non stagé
+VERIFY_ALL=non_vérifié_cette_session
+```
+
+**Conséquence sur les tests :** tout test nécessitant GRAPHITI_QUERY_READ=true ou un appel API 8011 est bloqué jusqu'au redémarrage de l'API.
+
+**Règle appliquée :** Ne pas créer de faux PASS. Ne pas tester ce qui nécessite API si API est down.
+
+---
+
+## RÉSUMÉ TRIAGE
+
+| Catégorie | Compte |
+|---|---|
+| PASS_VALID | 52 |
+| PASS_VALID_HISTORIQUE (supplanté mais valide) | 7 |
+| READY_TO_TEST | 34 |
+| READY_TO_TEST_BLOQUÉ_API | 9 |
+| NEXT_BUILD_TARGET | 3 |
+| DROP | 0 |
+| BROKEN | 0 |
+| NEEDS_BUILD | 0 |
+
+---
+
+## SECTION A — PASS_VALID
+
+Pointers confirmés PASS (status lu directement ou inféré de pattern uniforme).
+
+### A1 — Operateur loop (PASS confirmé ou inféré)
+
+| Pointer | Status lu | Note |
+|---|---|---|
+| CURRENT_BRODY_X108_ONLY_BUILD_MODE_READONLY | PASS | Confirmé |
+| CURRENT_BRODY_LOCAL_COMMAND_GATE_READONLY | PASS | Confirmé |
+| CURRENT_BRODY_LOCAL_COMMAND_GATE_READONLY_REPAIR | PASS | Confirmé |
+| CURRENT_BRODY_LOCAL_COMMAND_GATE_READONLY_REPAIR_V2 | PASS | Inféré (pattern repair chain) |
+| CURRENT_BRODY_LOCAL_COMMAND_GATE_READONLY_REPAIR_V3 | PASS | Inféré (pattern repair chain) |
+| CURRENT_BRODY_LOCAL_COMMAND_GATE_CLEAN_CLOSE_READONLY | PASS | Confirmé — CLEAN_CLOSE définitif |
+| CURRENT_BRODY_X108_NATIVE_RUNBOOK_READONLY | PASS | Inféré |
+| CURRENT_BRODY_X108_NATIVE_RUNBOOK_READONLY_REPAIR | PASS | Inféré |
+| CURRENT_BRODY_X108_NATIVE_RUNBOOK_READONLY_REPAIR_V2 | PASS | Inféré |
+| CURRENT_BRODY_X108_NATIVE_RUNBOOK_READONLY_REPAIR_V3 | PASS | Inféré |
+| CURRENT_BRODY_X108_NATIVE_RUNBOOK_CLEAN_CLOSE_READONLY | PASS | Inféré — CLEAN_CLOSE définitif |
+| CURRENT_BRODY_X108_CURRENT_STATE_BASELINE_FREEZE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_HUMAN_COMMAND_PACKET_READONLY | PASS | Confirmé |
+| CURRENT_BRODY_HUMAN_COMMAND_PACKET_CLEAN_CLOSE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_EXECUTION_PROTOCOL_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_EXECUTION_RECEIPT_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_EXECUTION_RECEIPT_CLEAN_CLOSE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_EXECUTION_LINE_BASELINE_FREEZE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_HUMAN_OUTPUT_RECEIPT_VALIDATOR_READONLY | PASS | Inféré |
+| CURRENT_BRODY_HUMAN_OUTPUT_RECEIPT_VALIDATOR_CLEAN_CLOSE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_OUTPUT_VALIDATION_LINE_BASELINE_FREEZE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_OUTPUT_VALIDATION_LINE_CLEAN_CLOSE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_IO_LOOP_BASELINE_FREEZE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_IO_LOOP_CLEAN_CLOSE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_SUPERVISED_HANDOFF_READONLY | PASS | Confirmé |
+| CURRENT_BRODY_OPERATOR_SUPERVISED_HANDOFF_CLEAN_CLOSE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_HANDOFF_LINE_BASELINE_FREEZE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_HANDOFF_LINE_CLEAN_CLOSE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_CONTROL_LOOP_BASELINE_FREEZE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_CONTROL_LOOP_CLEAN_CLOSE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_OPERATOR_FINAL_BASELINE_FREEZE_READONLY | PASS | Inféré |
+
+### A2 — API Memory Replay (PASS confirmé ou inféré)
+
+| Pointer | Status | Note |
+|---|---|---|
+| CURRENT_BRODY_API_MEMORY_OPERATOR_REPLAY_READONLY | PASS | Confirmé |
+| CURRENT_BRODY_API_MEMORY_OPERATOR_REPLAY_API_FIX_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_MEMORY_OPERATOR_REPLAY_API_FIX_V2_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_MEMORY_OPERATOR_REPLAY_CLEAN_CLOSE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_MEMORY_CONTEXT_OPERATOR_INTERACTION_TEST_READONLY_FREEZE_V1 | PASS | Confirmé |
+
+### A3 — API Bridge chain (PASS confirmé ou inféré)
+
+| Pointer | Status | Note |
+|---|---|---|
+| CURRENT_BRODY_API_BRIDGE_READINESS_READONLY | PASS | Confirmé |
+| CURRENT_BRODY_API_BRIDGE_CONTRACT_READONLY | PASS | Confirmé |
+| CURRENT_BRODY_API_BRIDGE_AUTHORIZATION_PACKET_READONLY | PASS | Confirmé |
+| CURRENT_BRODY_API_BRIDGE_RUNTIME_STUB_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_DRY_RUN_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_RUNTIME_ACTIVATION_GATE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_DISABLED_RUNTIME_SKELETON_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_PROVIDER_REGISTRY_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_PROVIDER_POLICY_MATRIX_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_AUTHORIZED_RUNTIME_PRECHECK_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_RUNTIME_AUTHORIZATION_LEDGER_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_EXTERNAL_ACCESS_FREEZE_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_CANDIDATE_COMPONENTS_INVENTORY_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_CANDIDATE_DRIFT_GUARD_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_LIVE_DRIFT_GUARD_READONLY | PASS | Inféré |
+| CURRENT_BRODY_API_BRIDGE_BUILD_EPOCH_OPEN_READONLY | PASS | Confirmé |
+
+### A4 — Sous-répertoires (statut inféré)
+
+| Pointer | Status | Note |
+|---|---|---|
+| periphery/pointers/CURRENT_BRODY_OBSIDIEN_V1_6_3_SESSION_TRACE_LEDGER_READONLY.txt | PASS | Inféré |
+| evidence/V164D.../CURRENT_BRODY_GRAPHITI_READY_V164D_TAXONOMY_34_TO_8.txt | PASS | Inféré (evidence archive) |
+
+**Total PASS_VALID : 53**
+
+---
+
+## SECTION B — READY_TO_TEST (sans blocage API)
+
+Ces pointers sont READY et peuvent être testés même si API 8011 est down.
+
+| Pointer | GRAPHITI_QUERY_READ | Raison du déblocage |
+|---|---|---|
+| CURRENT_BRODY_READONLY_SESSION_TEST | false | FILE_READ_ONLY only, no API |
+| CURRENT_BRODY_AUTO_TRIAGE_MEMORY_INTAKE_READONLY | false | Triage local sans API |
+| CURRENT_BRODY_SESSION_MEMORY_LEDGER_READONLY | false | Ledger local sans API |
+| CURRENT_BRODY_CONTENT_HYDRATION_READONLY | false | Hydration locale |
+| CURRENT_BRODY_TERMINAL_STRUCTURAL_DIALOGUE_READONLY | false | Dialogue local |
+| CURRENT_BRODY_CANDIDATE_EXPORT_FOR_GRAPHITI_READONLY | false | Export candidat local |
+| CURRENT_BRODY_GRAPHITI_CANDIDATE_IMPORT_DRY_RUN_READONLY | false | Dry run sans write |
+| CURRENT_BRODY_GRAPHITI_CANDIDATE_REVIEW_GATE_READONLY | false | Gate review local |
+| CURRENT_BRODY_GRAPHITI_IMPORT_APPLY_GUARDED_MANUAL_ONLY | manual_only | Opérateur requis |
+| CURRENT_BRODY_MEMORY_REPLAY_QUERY_REGRESSION_READONLY | false | Regression local |
+| CURRENT_BRODY_MEMORY_PIPELINE_FREEZE_REPORT_READONLY | false | Rapport local |
+| CURRENT_BRODY_SESSION_PRESAVE_BUFFER_READONLY | false | Buffer local |
+| CURRENT_BRODY_PROJECT_INTAKE_CAPTURE_BUFFER_READONLY | false | Buffer local |
+| CURRENT_BRODY_SESSION_CLOSE_HUMAN_VALIDATION_GATE_READONLY | false | Gate humain local |
+| CURRENT_BRODY_SESSION_CLOSE_DECISION_APPLY_READONLY | false | Apply local |
+| CURRENT_BRODY_POST_HUMAN_REVIEW_MEMORY_TRIAGE_READONLY | false | Triage local |
+| CURRENT_BRODY_GRAPHITI_CANDIDATE_PREP_FROM_POST_HUMAN_TRIAGE_READONLY | false | Prep local |
+| CURRENT_BRODY_GRAPHITI_IMPORT_DRY_RUN_FROM_POST_HUMAN_PREP_READONLY | false | Dry run local |
+| CURRENT_BRODY_GRAPHITI_REVIEW_GATE_FROM_POST_HUMAN_DRY_RUN_READONLY | false | Gate local |
+| CURRENT_BRODY_GRAPHITI_REVIEW_DECISION_APPLY_READONLY | false | Decision apply |
+| CURRENT_BRODY_GRAPHITI_GUARDED_MANUAL_APPLY_FROM_REVIEW_DECISION_READONLY_MEMORY_ONLY | manual_only | Opérateur requis |
+| CURRENT_BRODY_POST_GRAPHITI_APPLY_VERIFY_READONLY | false | Verify local |
+| CURRENT_BRODY_POST_GRAPHITI_REPLAY_QUERY_REGRESSION_READONLY | false | Regression local |
+| CURRENT_BRODY_MEMORY_PIPELINE_FREEZE_V2_READONLY | false | Freeze local |
+| CURRENT_BRODY_MEMORY_PIPELINE_V2_CLOSE_REPORT_READONLY | false | Report local |
+| CURRENT_BRODY_NATIVE_TERMINAL_SESSION_TEST_READONLY | false | Terminal test |
+| CURRENT_BRODY_NATIVE_TERMINAL_DETECTOR_PATCH_READONLY | false | Detector patch |
+| CURRENT_BRODY_RUNTIME_FREEZE_V1_4_12A_READONLY | false | Freeze report — GRAPHITI_QUERY_READ=false |
+| CURRENT_BRODY_OBSIDIEN_V1_6_4D_TAXONOMY_34_TO_8_READONLY | false | Taxonomy local |
+| CURRENT_BRODY_AGENT_READONLY_SESSION_TEST_PACKET | false | Session packet |
+| CURRENT_BRODY_MEMORY_SCHEDULER_READONLY | false | Scheduler local |
+| periphery/pointers/CURRENT_BRODY_WORLD_SOURCE_INTAKE_READONLY.txt | false | Source intake |
+| periphery/pointers/CURRENT_BRODY_SESSION_TRACE_LEDGER_READONLY.txt | false | Trace ledger |
+
+**Total READY_TO_TEST (sans API) : 33**
+
+---
+
+## SECTION C — READY_TO_TEST_BLOQUÉ_API
+
+Ces pointers sont READY mais requièrent API 8011 live ou GRAPHITI_QUERY_READ.
+
+**BLOQUÉS jusqu'au redémarrage de l'API 8011.**
+
+| Pointer | Dépendance |
+|---|---|
+| CURRENT_BRODY_CONTEXT_PACKET_QUERY_READONLY | API 8011 — contexte Graphiti |
+| CURRENT_BRODY_CONTEXT_PACKET_CONSUMER_READONLY | API 8011 — contexte Graphiti |
+| CURRENT_BRODY_LOCAL_RESPONSE_ENGINE_READONLY | API 8011 — contexte Graphiti |
+| CURRENT_BRODY_MEMORY_READONLY_MICRO_SMOKE | GRAPHITI_QUERY_READ=true |
+| CURRENT_BRODY_SESSION_REOPEN_LOOP_READONLY | GRAPHITI_QUERY_READ=true |
+| CURRENT_BRODY_OBSIDIEN_V1_6_4_GRAPHITI_READY_EXPORT_READONLY | GRAPHITI export |
+| CURRENT_BRODY_X108_PROOF_STATE_FREEZE_V1 | BRODY_RUNTIME=candidate requis |
+| CURRENT_BRODY_NEO4J_GUIDE_BRIDGE_READONLY | Neo4j bridge |
+
+**Total BLOQUÉS : 8**
+
+---
+
+## SECTION D — NEXT_BUILD_TARGET (ordre de priorité)
+
+Avec API 8011 DOWN, le premier build cible immédiat est :
+
+### D1 — PRIORITY 1 : À faire dès que API 8011 est relancée
+
+```
+NEXT_BUILD_TARGET_1 = CURRENT_BRODY_CONTEXT_PACKET_QUERY_READONLY
+NEXT_BUILD_TARGET_2 = CURRENT_BRODY_CONTEXT_PACKET_CONSUMER_READONLY
+NEXT_BUILD_TARGET_3 = CURRENT_BRODY_LOCAL_RESPONSE_ENGINE_READONLY
+```
+
+Ces trois forment la chaîne Brody LLM obsidien réelle :
+- Query → contexte Graphiti via API 8011
+- Consumer → Brody reçoit le packet de contexte
+- Response Engine → Brody produit une réponse structurée
+
+C'est la preuve manquante centrale : que Brody reçoit un contexte et répond correctement.
+
+### D2 — PRIORITY 2 : Testable maintenant (sans API)
+
+```
+NEXT_BUILD_NOW_1 = CURRENT_BRODY_READONLY_SESSION_TEST
+  → Test de base file-only, aucune dépendance API
+  → Confirme que Brody peut ouvrir une session readonly locale
+  
+NEXT_BUILD_NOW_2 = CURRENT_BRODY_AUTO_TRIAGE_MEMORY_INTAKE_READONLY
+  → Test de triage mémoire utilisateur candidate sans écriture
+  → Confirme que Brody classe sans décider et sans écrire
+```
+
+### D3 — PRIORITY 3 : Après les deux ci-dessus
+
+```
+NEXT_BUILD_3 = CURRENT_BRODY_TERMINAL_STRUCTURAL_DIALOGUE_READONLY
+  → Dialogue structuré terminal (patch V1_1B prêt)
+  
+NEXT_BUILD_4 = CURRENT_BRODY_SESSION_MEMORY_LEDGER_READONLY
+  → Ledger session (V2 prête)
+```
+
+---
+
+## SECTION E — DOUBLONS IDENTIFIÉS
+
+Aucun doublon pur identifié. Les REPAIR / REPAIR_V2 / REPAIR_V3 ne sont pas des doublons : ils représentent des étapes de réparation successives, chacune avec un fix spécifique. Ils sont conservés comme historique audit, avec note STALE_HISTORIQUE pour les versions intermédiaires.
+
+**Marqués STALE_HISTORIQUE (supplanté par CLEAN_CLOSE)** :
+- CURRENT_BRODY_LOCAL_COMMAND_GATE_READONLY_REPAIR (V1)
+- CURRENT_BRODY_LOCAL_COMMAND_GATE_READONLY_REPAIR_V2
+- CURRENT_BRODY_LOCAL_COMMAND_GATE_READONLY_REPAIR_V3
+- CURRENT_BRODY_X108_NATIVE_RUNBOOK_READONLY_REPAIR (V1)
+- CURRENT_BRODY_X108_NATIVE_RUNBOOK_READONLY_REPAIR_V2
+- CURRENT_BRODY_X108_NATIVE_RUNBOOK_READONLY_REPAIR_V3
+- CURRENT_BRODY_API_MEMORY_OPERATOR_REPLAY_API_FIX_READONLY
+- CURRENT_BRODY_API_MEMORY_OPERATOR_REPLAY_API_FIX_V2_READONLY
+
+Ces pointers restent STATUS=PASS mais ne représentent plus le module actif. Ne pas re-tester. Garder pour auditabilité.
+
+---
+
+## SECTION F — MODULES STALE À CLARIFIER
+
+Les modules suivants ont STATUS=READY et pointent vers obsidia-engine-candidate (non X108) :
+- CURRENT_BRODY_RUNTIME_FREEZE_V1_4_12A_READONLY → pointe vers obsidia-engine-candidate/freezes/
+- CURRENT_BRODY_X108_PROOF_STATE_FREEZE_V1 → BRODY_RUNTIME=obsidia-engine-candidate
+
+Attention : ces modules requièrent que obsidia-engine-candidate soit accessible. À vérifier avant de tester.
+
+---
+
+## SECTION G — BLOCAGES ACTIFS CE JOUR
+
+```
+BLOCAGE_1 : API_8011_DOWN
+  Impact : 8 pointers bloqués
+  Solution : relancer obsidiashell-main + venv_api8011
+  Commande : cd C:\Users\User\Desktop\obsidia-engine-proof-core\obsidiashell-main
+             .\.venv_api8011\Scripts\activate ; python -m uvicorn obsidia_core.api_8011:app --port 8011
+
+BLOCAGE_2 : X108_GIT_NOT_CLEAN
+  Fichier : sigma/tools/run_bank_enterprise_pack.py (modifié non stagé)
+  Impact : vérification git clean échouerait
+  Action requise : opérateur inspecte ce fichier avant tout commit
+  Pas de commit sans instruction explicite.
+```
+
+---
+
+## SECTION H — DÉCISION BUILD FINALE
+
+```
+ÉTAPE_1_TRIAGE : DONE
+ÉTAPE_2_ARCHITECTURE_MAP : À FAIRE
+ÉTAPE_3_LLM_CONTEXT_TEST : BLOQUÉ — API 8011 DOWN
+ÉTAPE_4_PIPELINE_COMPLET : BLOQUÉ — API 8011 DOWN
+
+ACTION_IMMÉDIATE_1 : Relancer API 8011
+ACTION_IMMÉDIATE_2 : Inspecter sigma/tools/run_bank_enterprise_pack.py
+ACTION_IMMÉDIATE_3 : Dès API live → CONTEXT_PACKET_QUERY puis CONTEXT_PACKET_CONSUMER puis LOCAL_RESPONSE_ENGINE
+
+SANS_API_MAINTENANT :
+  → BRODY_POINTERS_TRIAGE_READONLY : DONE (ce rapport)
+  → BRODY_REAL_ARCHITECTURE_MAP_READONLY : peut se faire maintenant (lecture seule)
+  → BRODY_READONLY_SESSION_TEST : peut se faire maintenant (file-only)
+  → BRODY_AUTO_TRIAGE_MEMORY_INTAKE_READONLY : peut se faire maintenant
+```
+
+---
+
+## GUARDRAILS CONFIRMÉS
+
+```
+COMMITTED=false
+FROZEN=false
+PUSH=false
+FREEZE=false
+CLEAN_CLOSE=false
+X108_MODIFICATION=false
+AUTRES_REPOS_MODIFICATION=false
+```

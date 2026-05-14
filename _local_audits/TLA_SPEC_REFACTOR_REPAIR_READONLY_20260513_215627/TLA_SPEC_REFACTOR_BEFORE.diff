@@ -1,0 +1,229 @@
+diff --git a/proofs/tla/DistributedX108.tla b/proofs/tla/DistributedX108.tla
+index 9ef1e3d3..f4a9ba65 100644
+--- a/proofs/tla/DistributedX108.tla
++++ b/proofs/tla/DistributedX108.tla
+@@ -1,79 +1,41 @@
+-\
+----- MODULE DistributedX108 ----
+-EXTENDS Naturals, Integers, Sequences, TLC
++﻿---- MODULE DistributedX108 ----
++EXTENDS Naturals, Integers, FiniteSets, TLC
+ 
+-(*
+-  Distributed X-108 with N = 3*f + 1 and up to f Byzantine nodes.
++VARIABLES f, N, tau, irr, elapsed, baseAct, honest, byz, local, global
+ 
+-  This model is abstract:
+-  - each node outputs a local decision in {"HOLD","ACT"}
+-  - honest nodes obey X-108 gate; byzantine nodes may output anything
+-  - aggregator is majority-of-N over "ACT" (supermajority condition)
+-  - safety property: if gate should hold on honest nodes, global decision is not ACT
++Vars == <<f, N, tau, irr, elapsed, baseAct, honest, byz, local, global>>
+ 
+-  NOTE: This is a model-checking spec; it is not a Lean proof.
+-*)
++NodeIds(n) == 1..n
+ 
+-CONSTANTS FMax, TauMax, ElapsedMin, ElapsedMax
+-ASSUME FMax \in Nat
+-ASSUME TauMax \in Nat
+-ASSUME ElapsedMin \in Int /\ ElapsedMax \in Int /\ ElapsedMin <= ElapsedMax
++GateDecision(t, i, e, b) ==
++  IF i /\ e < t THEN "HOLD"
++  ELSE IF b THEN "ACT" ELSE "HOLD"
+ 
+-VARIABLES f, N, tau, irr, elapsed, baseAct,
+-          honest, byz, local, global
++CountAct(xs) ==
++  Cardinality({ i \in DOMAIN xs : xs[i] = "ACT" })
+ 
+-NodeIds(n) == 1..n
++Aggregate(xs, ff) ==
++  IF CountAct(xs) >= (2 * ff + 1) THEN "ACT" ELSE "HOLD"
+ 
+-Init ==
+-  /\ f \in 0..FMax
+-  /\ N = 3*f + 1
+-  /\ tau \in 0..TauMax
++StateOK ==
++  /\ f \in 0..1
++  /\ N = 3 * f + 1
++  /\ tau \in 0..5
+   /\ irr \in BOOLEAN
+-  /\ elapsed \in ElapsedMin..ElapsedMax
++  /\ elapsed \in 0..10
+   /\ baseAct \in BOOLEAN
+   /\ honest \subseteq NodeIds(N)
+   /\ byz = NodeIds(N) \ honest
+   /\ Cardinality(byz) <= f
+   /\ local \in [NodeIds(N) -> {"HOLD","ACT"}]
+-  /\ global \in {"HOLD","ACT"}
+-
+-GateDecision(tau, irr, elapsed, baseAct) ==
+-  IF irr /\ elapsed < tau THEN "HOLD"
+-  ELSE IF baseAct THEN "ACT" ELSE "HOLD"
+-
+-(*
+-  Honest nodes must follow GateDecision.
+-  Byzantine nodes unconstrained.
+-*)
+-HonestConstraint ==
+-  \A i \in honest : local[i] = GateDecision(tau, irr, elapsed, baseAct)
+-
+-CountAct(xs) ==
+-  Cardinality({i \in DOMAIN xs : xs[i] = "ACT"})
+-
+-Aggregate(xs) ==
+-  IF CountAct(xs) >= (2*f + 1) THEN "ACT" ELSE "HOLD"
+-  \* supermajority threshold derived from N=3f+1 with <= f faulty
+-
+-Next ==
+-  /\ f' \in 0..FMax
+-  /\ N' = 3*f' + 1
+-  /\ tau' \in 0..TauMax
+-  /\ irr' \in BOOLEAN
+-  /\ elapsed' \in ElapsedMin..ElapsedMax
+-  /\ baseAct' \in BOOLEAN
+-  /\ honest' \subseteq NodeIds(N')
+-  /\ byz' = NodeIds(N') \ honest'
+-  /\ Cardinality(byz') <= f'
+-  /\ local' \in [NodeIds(N') -> {"HOLD","ACT"}]
+-  /\ ( \A i \in honest' : local'[i] = GateDecision(tau', irr', elapsed', baseAct') )
+-  /\ global' = Aggregate(local')
++  /\ (\A i \in honest : local[i] = GateDecision(tau, irr, elapsed, baseAct))
++  /\ global = Aggregate(local, f)
+ 
+-Spec ==
+-  Init /\ [][Next]_<<f,N,tau,irr,elapsed,baseAct,honest,byz,local,global>>
++Init == StateOK
++Next == UNCHANGED Vars
++Spec == Init /\ [][Next]_Vars
+ 
+ SafetyDistributed ==
+-  [] ( (irr /\ elapsed < tau) => (global # "ACT") )
++  (irr /\ elapsed < tau) => (global # "ACT")
+ 
+-THEOREM Spec => SafetyDistributed
+-====
+\ No newline at end of file
++====
+diff --git a/proofs/tla/DistributedX108_MC.cfg b/proofs/tla/DistributedX108_MC.cfg
+index aecb38c0..f2809b9d 100644
+--- a/proofs/tla/DistributedX108_MC.cfg
++++ b/proofs/tla/DistributedX108_MC.cfg
+@@ -1,2 +1,9 @@
++CONSTANTS
++  FMax = 1
++  TauMax = 5
++  ElapsedMin = 0
++  ElapsedMax = 10
++
+ SPECIFICATION Spec
+ INVARIANT SafetyDistributed
++CHECK_DEADLOCK FALSE
+\ No newline at end of file
+diff --git a/proofs/tla/X108.cfg b/proofs/tla/X108.cfg
+index bd98523b..ff723b0c 100644
+--- a/proofs/tla/X108.cfg
++++ b/proofs/tla/X108.cfg
+@@ -1,8 +1,8 @@
+ CONSTANTS
+-  TauMax <- TauMax_val
+-  ElapsedMin <- ElapsedMin_val
+-  ElapsedMax <- ElapsedMax_val
++  TauMax = 5
++  ElapsedMin = 0
++  ElapsedMax = 10
+ 
+ SPECIFICATION Spec
+-
+-INVARIANT SafetyX108
++PROPERTY SafetyX108
++CHECK_DEADLOCK FALSE
+\ No newline at end of file
+diff --git a/proofs/tla/X108.tla b/proofs/tla/X108.tla
+index 3ab93f85..1225a8e9 100644
+--- a/proofs/tla/X108.tla
++++ b/proofs/tla/X108.tla
+@@ -1,53 +1,35 @@
+-\
+ ---- MODULE X108 ----
+-EXTENDS Naturals, TLC
+-
+-(*
+-  Single-node X-108 gate model (abstract).
+-
+-  Variables:
+-    tau     : Nat       \* gate threshold (non-negative)
+-    irr     : BOOLEAN   \* irreversibility flag
+-    elapsed : Int       \* time since proposal; may be negative (clock skew)
+-    baseAct : BOOLEAN   \* base decision wants to ACT (e.g., theta <= S)
+-
+-    decision ∈ {"HOLD","ACT"}
+-*)
++EXTENDS Naturals, Integers, TLC
+ 
+ CONSTANTS TauMax, ElapsedMin, ElapsedMax
+ ASSUME TauMax \in Nat
+ ASSUME ElapsedMin \in Int /\ ElapsedMax \in Int /\ ElapsedMin <= ElapsedMax
+ 
+-VARIABLES tau, irr, elapsed, baseAct, decision
++VARIABLES tau, irr, elapsed, baseDecision, decision
++
++DecisionSet == {"HOLD", "ALLOW", "BLOCK"}
++
++GateDecision(t, i, e, d) ==
++  IF i /\ e < t THEN "HOLD" ELSE d
+ 
+ Init ==
+   /\ tau \in 0..TauMax
+   /\ irr \in BOOLEAN
+   /\ elapsed \in ElapsedMin..ElapsedMax
+-  /\ baseAct \in BOOLEAN
+-  /\ decision \in {"HOLD","ACT"}
+-
+-(*
+-  Gate rule:
+-    If irr and elapsed < tau -> HOLD
+-    else decision follows baseAct.
+-*)
+-GateDecision(tau, irr, elapsed, baseAct) ==
+-  IF irr /\ elapsed < tau THEN "HOLD"
+-  ELSE IF baseAct THEN "ACT" ELSE "HOLD"
++  /\ baseDecision \in DecisionSet
++  /\ decision = GateDecision(tau, irr, elapsed, baseDecision)
+ 
+ Next ==
+   /\ tau' \in 0..TauMax
+   /\ irr' \in BOOLEAN
+   /\ elapsed' \in ElapsedMin..ElapsedMax
+-  /\ baseAct' \in BOOLEAN
+-  /\ decision' = GateDecision(tau', irr', elapsed', baseAct')
++  /\ baseDecision' \in DecisionSet
++  /\ decision' = GateDecision(tau', irr', elapsed', baseDecision')
+ 
+ Spec ==
+-  Init /\ [][Next]_<<tau,irr,elapsed,baseAct,decision>>
++  Init /\ [][Next]_<<tau, irr, elapsed, baseDecision, decision>>
+ 
+ SafetyX108 ==
+-  [] ( (irr /\ elapsed < tau) => (decision # "ACT") )
++  []((irr /\ elapsed < tau) => (decision # "ALLOW"))
+ 
+-THEOREM Spec => SafetyX108
+ ====
+\ No newline at end of file
+diff --git a/proofs/tla/X108_MC.cfg b/proofs/tla/X108_MC.cfg
+index b24d13aa..a7709b51 100644
+--- a/proofs/tla/X108_MC.cfg
++++ b/proofs/tla/X108_MC.cfg
+@@ -1,2 +1,8 @@
++CONSTANTS
++  TauMax = 5
++  ElapsedMin = 0
++  ElapsedMax = 10
++
+ SPECIFICATION Spec
+ INVARIANT SafetyX108
++CHECK_DEADLOCK FALSE
+\ No newline at end of file

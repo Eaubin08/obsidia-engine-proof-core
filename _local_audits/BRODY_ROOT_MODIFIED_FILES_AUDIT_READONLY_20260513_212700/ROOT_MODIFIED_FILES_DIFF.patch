@@ -1,0 +1,109 @@
+diff --git a/examples/bank_normal.json b/examples/bank_normal.json
+index efc1c6a8..222f92f9 100644
+--- a/examples/bank_normal.json
++++ b/examples/bank_normal.json
+@@ -1,21 +1,14 @@
+ {
+-  "transaction_type": "debit",
+-  "amount": 500.0,
+-  "channel": "web",
+-  "counterparty_known": true,
+-  "counterparty_age_days": 365,
+-  "account_balance": 50000.0,
+-  "available_cash": 45000.0,
+-  "historical_avg_amount": 450.0,
+-  "behavior_shift_score": 0.1,
+-  "fraud_score": 0.05,
+-  "policy_limit": 10000.0,
+-  "affordability_score": 0.9,
+-  "urgency_score": 0.2,
+-  "identity_mismatch_score": 0.0,
+-  "narrative_conflict_score": 0.0,
+-  "device_trust_score": 0.95,
+-  "recent_failed_attempts": 0,
+-  "elapsed_s": 120.0,
+-  "min_required_elapsed_s": 108.0
+-}
++  "domain": "banking",
++  "decision_id": "DEC-BANK-001",
++  "trace_id": "TRACE-BANK-001",
++  "market_verdict": "ACT",
++  "x108_gate": "ALLOW",
++  "confidence": 0.91,
++  "reason_code": "CONSENSUS_CLEAR",
++  "severity": "LOW",
++  "attestation_ref": "RFC3161-BANK-001",
++  "source": "fixture",
++  "ticket_required": true,
++  "ticket_id": "TICKET-BANK-001"
++}
+\ No newline at end of file
+diff --git a/examples/bank_suspicious.json b/examples/bank_suspicious.json
+index 21a966e1..cacc571c 100644
+--- a/examples/bank_suspicious.json
++++ b/examples/bank_suspicious.json
+@@ -1,21 +1,14 @@
+ {
+-  "transaction_type": "wire_transfer",
+-  "amount": 8000.0,
+-  "channel": "mobile",
+-  "counterparty_known": false,
+-  "counterparty_age_days": 5,
+-  "account_balance": 12000.0,
+-  "available_cash": 11000.0,
+-  "historical_avg_amount": 300.0,
+-  "behavior_shift_score": 0.85,
+-  "fraud_score": 0.78,
+-  "policy_limit": 5000.0,
+-  "affordability_score": 0.4,
+-  "urgency_score": 0.9,
+-  "identity_mismatch_score": 0.6,
+-  "narrative_conflict_score": 0.7,
+-  "device_trust_score": 0.3,
+-  "recent_failed_attempts": 3,
+-  "elapsed_s": 15.0,
+-  "min_required_elapsed_s": 108.0
+-}
++  "domain": "banking",
++  "decision_id": "DEC-BANK-002",
++  "trace_id": "TRACE-BANK-002",
++  "market_verdict": "BLOCK",
++  "x108_gate": "BLOCK",
++  "confidence": 0.97,
++  "reason_code": "FRAUD_RISK_HIGH",
++  "severity": "HIGH",
++  "attestation_ref": "RFC3161-BANK-002",
++  "source": "fixture",
++  "ticket_required": false,
++  "ticket_id": ""
++}
+\ No newline at end of file
+diff --git a/package.json b/package.json
+index d32386ef..4ae348de 100644
+--- a/package.json
++++ b/package.json
+@@ -19,7 +19,7 @@
+     "better-sqlite3": "^12.4.1",
+     "clsx": "^2.1.1",
+     "dotenv": "^17.2.3",
+-    "express": "^4.21.2",
++    "express": "^4.22.1",
+     "lucide-react": "^0.546.0",
+     "motion": "^12.23.24",
+     "react": "^19.0.0",
+diff --git a/proofs/PROOFKIT_REPORT.json b/proofs/PROOFKIT_REPORT.json
+(timestamp 2026-03-11 -> 2026-04-11; stdout path /home/ubuntu -> C:\Users\User\Downloads\...; no newline at EOF added; all checks still PASS)
+diff --git a/proofs/V18_7/results/results_v18_7.json b/proofs/V18_7/results/results_v18_7.json
+(WHITESPACE_ONLY — trailing newline removed; content identical)
+diff --git a/proofs/V18_8/results/results_v18_8.json b/proofs/V18_8/results/results_v18_8.json
+(WHITESPACE_ONLY — trailing newline removed; content identical)
+diff --git a/proofs/tla/DistributedX108.tla b/proofs/tla/DistributedX108.tla
+(MAJOR_TLA_REFACTOR — EXTENDS Sequences->FiniteSets; CONSTANTS inlined; GateDecision params renamed; Aggregate takes explicit f param; SafetyDistributed temporal->state predicate; Next==UNCHANGED)
+diff --git a/proofs/tla/DistributedX108_MC.cfg b/proofs/tla/DistributedX108_MC.cfg
+(CONFIG_UPDATE — added CONSTANTS FMax=1 TauMax=5 ElapsedMin=0 ElapsedMax=10; added CHECK_DEADLOCK FALSE)
+diff --git a/proofs/tla/X108.cfg b/proofs/tla/X108.cfg
+(CONFIG_UPDATE — CONSTANTS symbolic->literal; INVARIANT->PROPERTY; added CHECK_DEADLOCK FALSE)
+diff --git a/proofs/tla/X108.tla b/proofs/tla/X108.tla
+(MAJOR_TLA_REFACTOR — baseAct:BOOLEAN->baseDecision:DecisionSet{HOLD,ALLOW,BLOCK}; GateDecision passes d directly; SafetyX108 decision#"ACT"->decision#"ALLOW"; THEOREM removed)
+diff --git a/proofs/tla/X108_MC.cfg b/proofs/tla/X108_MC.cfg
+(CONFIG_UPDATE — added CONSTANTS TauMax=5 ElapsedMin=0 ElapsedMax=10; added CHECK_DEADLOCK FALSE)
